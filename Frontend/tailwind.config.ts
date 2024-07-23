@@ -7,12 +7,21 @@ const config: Config = {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
-      },
+    extend: {},
+
+    boxShadow: {
+      default: '0 3px 6px rgb(0, 0, 0, 0.16)',
+    },
+
+    fontFamily: {
+      YekanBakhFat: ["var(--font-yekan-fat)"],
+      YekanBakhMedium: ["var(--font-yekan-medium)"],
+      YekanBakhBold: ["var(--font-yekan-bold)"],
+      YekanBakhLight: ["var(--font-yekan-light)"],
+      YekanBakhHeavy: ["var(--font-yekan-heavy)"],
+      YekanBakhThin: ["var(--font-yekan-thin)"],
+      YekanBakhRegular: ["var(--font-yekan-regular)"],
+      YekanBakhHairline: ["var(--font-yekan-hairline)"],
     },
   },
   plugins: [],
