@@ -1,12 +1,30 @@
 "use client";
 import axios from "axios";
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
 import Image from "next/image";
+import { Audio } from 'react-loader-spinner'
+import { useRouter } from 'next/navigation'
 
 // Images
 import adminLoginImage from "@/public/images/admin-login.png";
 
+// api
+import { adminLogin } from "@/app/actions/actions";
+
+interface MessageInterface {
+  success: boolean,
+  message: string,
+}
+
 export default function AdminLogin() {
+  const router = useRouter()
+
+  const [loading, setLoading] = useState<boolean>(false);
+  const [message, setMessage] = useState<MessageInterface>({
+    success: true,
+    message: "",
+  })
+
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget as HTMLFormElement;
@@ -23,13 +41,17 @@ export default function AdminLogin() {
       password: passwordInput.value,
     };
 
-    console.log("waiting...");
-    const response = await axios.post("http://127.0.0.1:8000/admin/login/?next=/admin/", {
-      body: data,
-    });
-    console.log("Done.");
+    setLoading(true);
 
-    console.log(response);
+    const response = await adminLogin(data);
+
+    setLoading(false);
+    setMessage({
+      success: response.success,
+      message: response.message,
+    });
+
+    if(response.success) router.push('/danesh_admin/panel');
   };
 
   return (
@@ -71,13 +93,16 @@ export default function AdminLogin() {
 
           {/* Submit Button */}
           <button className='w-[300px] h-[35px] flex justify-center items-center rounded-[10px] bg-[#407BFF] text-[14px] text-white font-YekanBakhMedium'>
-            ورود
+            {
+              loading ? <Audio height={20} width={20} color="white"/> : "ورود"
+            }
+            
           </button>
         </form>
 
         {/* message */}
-        <span className='text-[14px] text-[#B91919] font-YekanBakhMedium'>
-          نام کاربری یا رمز عبور نادرست است
+        <span className={`text-[14px] ${message.success ? 'text-[#31b919]' : 'text-[#B91919]'} font-YekanBakhMedium`}>
+          {message.message}
         </span>
       </section>
 

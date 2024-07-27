@@ -1,9 +1,10 @@
 from .models import User
 from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from rest_framework import serializers
+from rest_framework import serializers, status
 from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework.response import Response
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -20,6 +21,24 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['username'] = user.username
         token['email'] = user.email
         token['image'] = str(user.profile.image)
+        return token
+    
+class AdminLoginSeializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):    
+        token = super().get_token(user)
+
+        if user.is_superuser == False:
+            token['access_token'] = None
+            token['refresh_token'] = None
+            token['message'] = "User is not admin"
+        else:
+            token['first_name'] = user.profile.first_name
+            token['last_name'] = user.profile.last_name
+            token['username'] = user.username
+            token['email'] = user.email
+            token['image'] = str(user.profile.image)
+            
         return token
 
 
