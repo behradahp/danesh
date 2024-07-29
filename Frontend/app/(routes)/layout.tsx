@@ -1,4 +1,5 @@
 import "./globals.css";
+import { Provider as JotaiProvider } from "jotai";
 
 import {
   YekanBakhBold,
@@ -28,8 +29,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='fa' dir="rtl" className={`${fonts.map((f) => f.variable).join(" ")}`}>
-      <body>{children}</body>
+    <html
+      lang='fa'
+      dir='rtl'
+      className={`${fonts.map((f) => f.variable).join(" ")}`}
+    >
+      <body>
+        <JotaiProvider>{children}</JotaiProvider>
+      </body>
     </html>
   );
 }

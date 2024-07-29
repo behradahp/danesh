@@ -2,11 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
+* {
+  box-sizing: border-box;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+::-webkit-scrollbar {
+  height: 7px;
+  width: 10px;
+}
+ 
+::-webkit-scrollbar-thumb {
+  background: rgb(164, 192, 255); 
+  border-radius: 10px;
 }

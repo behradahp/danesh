@@ -1,42 +1,90 @@
-'use server'
-
 import axios from "axios";
-import { cookies } from "next/headers";
 
 // Create an axios instance
 const apiInstance = axios.create({
-  baseURL: "http://localhost:8000/",
+  baseURL: "http://127.0.0.1:8000/api/",
   headers: {
     "Content-Type": "application/json",
   },
 });
 
 interface ResponseType<T> {
-    data: T,
-    status: Number,
+  data: T;
+  status: Number;
 }
 
-export const adminLogin = async (data: { username: string; password: string }) => {
-    try {
-        const response: ResponseType<Login> = await apiInstance.post("auth/admin/login", data);
-        cookies().set("access_token", response.data.access);
-        cookies().set("refresh_token", response.data.refresh);
-        
-        return {
-            success: true,
-            message: "ورود موفقیت آمیز بود.",
-        };
-    } catch(err: any) {
-        if(err.response && err.response.status == 401) {
-            return {
-                success: false,
-                message: "نام کاربری یا رمز عبور نادرست است!",
-            };
-        }
-        return {
-            success: false,
-            message: "خطایی ناشناخته رخ داد است!",
-        };
-    }
-    
+export const getCategories = async () => {
+  try {
+    const response = await apiInstance.get("categories/");
+
+    return {
+      success: true,
+      data: response.data,
+      error: "",
+    };
+  } catch (err: any) {
+    return {
+      success: false,
+      data: null,
+      error: JSON.stringify(err),
+    };
+  }
+};
+
+export const getProducts = async () => {
+  try {
+    const response = await apiInstance.get("products/");
+
+    return {
+      success: true,
+      data: response.data,
+      error: "",
+    };
+  } catch (err: any) {
+    return {
+      success: false,
+      data: null,
+      error: JSON.stringify(err),
+    };
+  }
+};
+
+export const productsCategoryCount = async () => {
+  try {
+    const response = await apiInstance.get("products/category/count/");
+
+    return {
+      success: true,
+      data: response.data,
+      error: "",
+    };
+  } catch (err: any) {
+    return {
+      success: false,
+      data: null,
+      error: JSON.stringify(err),
+    };
+  }
+};
+
+export const createProduct = async (data: FormData) => {
+  try {
+    await axios.post("http://127.0.0.1:8000/api/products/", data, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return {
+      success: true,
+      data: null,
+      error: "",
+    };
+  } catch (err: any) {
+    return {
+      success: false,
+      data: null,
+      error: JSON.stringify(err),
+    };
+  }
 };

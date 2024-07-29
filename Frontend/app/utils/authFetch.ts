@@ -1,98 +1,90 @@
-"use server";
+"use client";
 
-import { cookies } from "next/headers";
+export const authFetch = async () => {
+  const access_token = localStorage.getItem("access_token");
+  const refresh_token = localStorage.getItem("refresh_token");
 
-import axios from "axios";
-
-interface ResponseType {
-  data: any;
-  status: Number;
-}
-
-export default async function authFetch(
-  url: string,
-  method: string,
-  data?: any
-) {
-  const access_token = cookies().get("access_token");
-  const refresh_token = cookies().get("refresh_token");
-
-  //  Check if token is exist
-  if (!access_token) {
-    return {
-      success: false,
-      data: {},
-      error: "Unauthorized",
-    };
+  if(!access_token || !refresh_token) {
+    console.log("Unauthorize!");
   }
 
-  const header = {
-    headers: { Authorization: `Bearer ${access_token!.value}` },
-  };
-
-  //  Check if token expired
-  try {
-    await axios.get("http://localhost:8000/auth/panel/", header);
-  } catch (err) {
-    const tokenData = new FormData();
-    tokenData.append("refresh", refresh_token!.value);
-
-    try {
-      const tokenResponse = await axios.post('http://localhost:8000/auth/token/refresh/', {
-        refresh: refresh_token?.value
-      });
-
-      // header.headers = { Authorization: `Bearer ${tokenResponse.data.access}` };
-      cookies().set("access_token", tokenResponse.data.access);
-      cookies().set("refresh_token", tokenResponse.data.refresh);
-    } catch (err: any) {
-      return {
-        success: false,
-        data: 1,
-        error: err.response.data,
-      };
+  await fetch("http://127.0.0.1:8000/auth/panel/", {
+    method: "GET",
+    headers: {
+       'Authorization': `Bearer ${access_token}`,
     }
-  }
+  })
+  .then((response) => {
+    if(response.status === 401) {
+      throw new Error("Token Expired, Trying to refresh...");
+    } else {
+      console.log("SUCCESS");
+    }
+  })
+  .catch((error) => {
+    console.log(error);
 
-  switch (method.toLowerCase()) {
-    case "post":
-      if (!data) {
-        return {
-          success: false,
-          data: {},
-          error: "data is empty",
-        };
-      }
+    const tokenData = new FormData();
+    tokenData.append("refresh", refresh_token!);
 
-      try {
-        const response = axios.post(url, data, header);
-        return {
-          success: true,
-          data: response,
-          error: "",
-        };
-      } catch (err: any) {
-        return {
-          success: false,
-          data: {},
-          error: err.message,
-        };
-      }
+    fetch("http://127.0.0.1:8000/auth/token/refresh/", {
+      method: "POST",
+      body: tokenData,
+    })
+    .then((response) => {
+      if(response.ok) return response.json();
 
-    case "get":
-      try {
-        const response = axios.post(url, header);
-        return {
-          success: true,
-          data: response,
-          error: "",
-        };
-      } catch (err: any) {
-        return {
-          success: false,
-          data: {},
-          error: err.message,
-        };
-      }
-  }
+      throw new Error("Refreshing token faild!");
+    })
+    .then((data) => {
+      console.log("Data refreshed successfuly");
+      localStorage.setItem("access_token", data.access);
+      localStorage.setItem("refresh_token", data.refresh);
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+  })
+
+  // switch (method.toLowerCase()) {
+  //   case "post":
+  //     if (!data) {
+  //       return {
+  //         success: false,
+  //         data: {},
+  //         error: "data is empty",
+  //       };
+  //     }
+
+  //     try {
+  //       const response = axios.post(url, data, header);
+  //       return {
+  //         success: true,
+  //         data: response,
+  //         error: "",
+  //       };
+  //     } catch (err: any) {
+  //       return {
+  //         success: false,
+  //         data: {},
+  //         error: err.message,
+  //       };
+  //     }
+
+  //   case "get":
+  //     try {
+  //       const response = axios.post(url, header);
+  //       return {
+  //         success: true,
+  //         data: response,
+  //         error: "",
+  //       };
+  //     } catch (err: any) {
+  //       return {
+  //         success: false,
+  //         data: {},
+  //         error: err.message,
+  //       };
+  //     }
+  // }
 }

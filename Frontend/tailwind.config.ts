@@ -9,6 +9,10 @@ const config: Config = {
   theme: {
     extend: {},
 
+    screens: {
+      dsk: '1200px',
+    },
+
     boxShadow: {
       default: '0 3px 6px rgb(0, 0, 0, 0.16)',
     },

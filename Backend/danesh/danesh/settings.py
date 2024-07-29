@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +27,7 @@ SECRET_KEY = 'django-insecure-rt#h&hfn6lho#q@9d#0@o@)zp_w((n^t6w5965(3419byk(43+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.0.7', '127.0.0.1']
 
 
 # Application definition
@@ -44,6 +45,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
     'auth_api',
+    'api',
 ]
 
 MIDDLEWARE = [
@@ -174,7 +176,7 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+'ACCESS_TOKEN_LIFETIME': timedelta(minutes=10),
 'REFRESH_TOKEN_LIFETIME': timedelta(days=50),
 'ROTATE_REFRESH_TOKENS': True,
 'BLACKLIST_AFTER_ROTATION': True,
@@ -204,3 +206,5 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 AUTH_USER_MODEL = 'auth_api.User'
 
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_URL = "/media/"
