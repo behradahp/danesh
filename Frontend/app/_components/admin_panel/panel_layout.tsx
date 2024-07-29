@@ -1,11 +1,13 @@
 "use client";
+
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { useRouter } from 'next/navigation'
 
 // Components
 import PanelSidebar from "./panel_sidebar";
 import PanelHeader from "./panel_header";
-import { authFetch } from "@/app/utils/authFetch";
+import { adminCheck } from "@/app/utils/adminCheck";
 
 export default function PanelLayout({
   children,
@@ -14,10 +16,24 @@ export default function PanelLayout({
   children: React.ReactNode;
   section_id: string;
 }>) {
+  const router = useRouter()
   const pathname = usePathname();
 
   useEffect(() => {
-    authFetch();
+    const checkAdminUser = async () => {
+      const response:
+        | {
+            success: boolean;
+            error: string;
+          }
+        | undefined = await adminCheck();
+
+      if (response && !response.success) {
+        router.push("/auth/admin_login");
+      }
+    };
+
+    checkAdminUser();
   }, [pathname]);
 
   return (

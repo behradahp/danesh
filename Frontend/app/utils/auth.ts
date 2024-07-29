@@ -65,7 +65,7 @@ export const logout = () => {
   localStorage.removeItem("access_token");
   localStorage.removeItem("refresh_token");
 
-  redirect("/danesh_admin/login");
+  redirect("/auth/admin_login");
 };
 
 // export const adminCheck = async () => {

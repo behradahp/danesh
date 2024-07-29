@@ -1,11 +1,15 @@
 "use client";
+import { redirect } from "next/navigation";
 
-export const authFetch = async () => {
+export const adminCheck = async () => {
   const access_token = localStorage.getItem("access_token");
   const refresh_token = localStorage.getItem("refresh_token");
 
   if(!access_token || !refresh_token) {
-    console.log("Unauthorize!");
+    return {
+      success: false,
+      error: "Unauthorize",
+    }
   }
 
   await fetch("http://127.0.0.1:8000/auth/panel/", {
@@ -18,7 +22,10 @@ export const authFetch = async () => {
     if(response.status === 401) {
       throw new Error("Token Expired, Trying to refresh...");
     } else {
-      console.log("SUCCESS");
+      return {
+        success: true,
+        error: "",
+      }
     }
   })
   .catch((error) => {
@@ -40,9 +47,16 @@ export const authFetch = async () => {
       console.log("Data refreshed successfuly");
       localStorage.setItem("access_token", data.access);
       localStorage.setItem("refresh_token", data.refresh);
+      return {
+        success: true,
+        error: "",
+      }
     })
     .catch((error) => {
-      console.log(error);
+      return {
+        success: false,
+        error: error,
+      }
     })
   })
 

@@ -31,9 +31,45 @@ export const getCategories = async () => {
   }
 };
 
+export const getCategory = async ({ id }: { id: string }) => {
+  try {
+    const response = await apiInstance.get(`categories/${id}/`);
+
+    return {
+      success: true,
+      data: response.data,
+      error: "",
+    };
+  } catch (err: any) {
+    return {
+      success: false,
+      data: null,
+      error: JSON.stringify(err),
+    };
+  }
+};
+
 export const getProducts = async () => {
   try {
     const response = await apiInstance.get("products/");
+
+    return {
+      success: true,
+      data: response.data,
+      error: "",
+    };
+  } catch (err: any) {
+    return {
+      success: false,
+      data: null,
+      error: JSON.stringify(err),
+    };
+  }
+};
+
+export const getCategoryProducts = async ({ id }: { id: string }) => {
+  try {
+    const response = await apiInstance.get(`products/category/${id}/`);
 
     return {
       success: true,

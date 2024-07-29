@@ -61,7 +61,7 @@ export default function AdminLogin() {
 
       localStorage.setItem("user", JSON.stringify(userData));
 
-      // router.push("/danesh_admin/dashboard");
+      router.push("/danesh_admin/dashboard");
     }
   };
 
