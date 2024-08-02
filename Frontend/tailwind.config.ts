@@ -10,7 +10,7 @@ const config: Config = {
     extend: {},
 
     screens: {
-      dsk: '1200px',
+      dsk: '1270px',
     },
 
     boxShadow: {

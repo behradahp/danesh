@@ -7,10 +7,24 @@ import { useEffect, useState } from "react";
 
 // api
 import { productsCategoryCount } from "@/app/actions/actions";
+import { colorPalette } from "@/app/constants/color_palette";
+
+const selectedColors: number[] = []
 
 export default function AdminDashboard() {
   const [categories, setCategories] = useState<ProductCount | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+
+  const handleRandomColor = () => {
+    if(selectedColors.length == colorPalette.length) selectedColors.length = 0
+    while(true) {
+      const index = Math.floor(Math.random()*colorPalette.length)
+      if(!selectedColors.includes(index)) {
+        selectedColors.push(index);
+        return index;
+      }
+    }
+  }
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -72,7 +86,7 @@ export default function AdminDashboard() {
                     {/* ---------------------------- Icon ----------------------------------- */}
                     <div
                       className={`w-[30px] h-[30px] flex justify-center rounded-[100px]`}
-                      style={{ backgroundColor: item.color }}
+                      style={{ backgroundColor: colorPalette[handleRandomColor()] }}
                     >
                       <CategoryIcon color='white' />
                     </div>

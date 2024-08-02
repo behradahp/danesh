@@ -38,9 +38,9 @@ const sections: Section[] = [
   },
   {
     id: 3,
-    name: "اضافه کردن محصولات",
+    name: "اضافه کردن محصول",
     icon: AddProductIcon,
-    url: "",
+    url: "/danesh_admin/products/add",
   },
   {
     id: 4,

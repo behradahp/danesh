@@ -1,5 +1,7 @@
 "use client";
-import { redirect } from "next/navigation";
+
+// Constants
+import {url} from "@/app/constants/url";
 
 export const adminCheck = async () => {
   const access_token = localStorage.getItem("access_token");
@@ -12,7 +14,7 @@ export const adminCheck = async () => {
     }
   }
 
-  await fetch("http://127.0.0.1:8000/auth/panel/", {
+  await fetch(`${url}auth/panel/`, {
     method: "GET",
     headers: {
        'Authorization': `Bearer ${access_token}`,
@@ -29,12 +31,10 @@ export const adminCheck = async () => {
     }
   })
   .catch((error) => {
-    console.log(error);
-
     const tokenData = new FormData();
     tokenData.append("refresh", refresh_token!);
 
-    fetch("http://127.0.0.1:8000/auth/token/refresh/", {
+    fetch(`${url}auth/token/refresh/`, {
       method: "POST",
       body: tokenData,
     })
@@ -44,12 +44,11 @@ export const adminCheck = async () => {
       throw new Error("Refreshing token faild!");
     })
     .then((data) => {
-      console.log("Data refreshed successfuly");
       localStorage.setItem("access_token", data.access);
       localStorage.setItem("refresh_token", data.refresh);
       return {
         success: true,
-        error: "",
+        error: "Data refreshed successfuly",
       }
     })
     .catch((error) => {

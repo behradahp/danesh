@@ -1,5 +1,6 @@
 import "./globals.css";
 import { Provider as JotaiProvider } from "jotai";
+import { ToastContainer } from "react-toastify";
 
 import {
   YekanBakhBold,
@@ -35,6 +36,7 @@ export default function RootLayout({
       className={`${fonts.map((f) => f.variable).join(" ")}`}
     >
       <body>
+        <ToastContainer />
         <JotaiProvider>{children}</JotaiProvider>
       </body>
     </html>

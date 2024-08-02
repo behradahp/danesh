@@ -1,16 +1,32 @@
+"use client";
+
 import Image from "next/image";
+import { useState } from "react";
+import Link from "next/link";
 
 // Icons
 import ProductEditIcon from "@/app/_components/icons/product_edit_icon";
 import ProductAdminIcon from "@/app/_components/icons/product_admin_icon";
 
-export default function ProductCard({ data }: { data: Product }) {
+// Images
+import defaultImage from "@/public/images/default-image.jpg";
+
+export default function ProductCard({
+  data,
+  url = "",
+}: {
+  data: Product;
+  url?: string;
+}) {
+  const [showEdit, setShowEdit] = useState<boolean>(false);
+  const [showAdmin, setShowAdmin] = useState<boolean>(false);
+  console.log(Date.parse(data.published_date));
   return (
-    <div className='w-[200px] flex flex-col items-center gap-[20px] p-[10px] bg-white rounded-[10px]'>
+    <div className='w-[200px] flex flex-col items-center p-[10px] bg-white rounded-[10px] hover:shadow-default'>
       <div className='w-[190px] h-[180px]'>
         <Image
-          loader={() => data.main_image}
-          src={data.main_image}
+          loader={!data.main_image ? () => defaultImage.src : () => url + data.main_image}
+          src={!data.main_image ? defaultImage.src : url + data.main_image}
           alt='product-image'
           width={0}
           height={0}
@@ -19,20 +35,71 @@ export default function ProductCard({ data }: { data: Product }) {
         />
       </div>
 
-      <span className='text-[14px] text-[#263238] font-YekanBakhBold'>
+      <div className='h-[10px]'></div>
+
+      <span className='min-h-[60px] text-[14px] text-[#263238] font-YekanBakhBold'>
         {data.name.slice(0, 50).concat("...")}
       </span>
 
-      <div className='w-full flex justify-end'>
-        <span className='text-[14px] text-[#263238] font-YekanBakhMedium'>
-          {(Number(data.price) / 10).toLocaleString("fa")} تومان
-        </span>
-      </div>
+      {data.discount == 0 ? (
+        <div className='w-full flex justify-end  min-h-[40px]'>
+          <span className='text-[14px] text-[#263238] font-YekanBakhMedium'>
+            {Number(data.price).toLocaleString("fa")} تومان
+          </span>
+        </div>
+      ) : (
+        <div className='w-full flex justify-between'>
+          <div className='w-[36px] h-[36px] flex justify-center items-center rounded-[100px] bg-[#D80C27]'>
+            <span className='text-[12px] text-white font-YekanBakhMedium'>
+              {Number(data.discount).toLocaleString("fa")}%-
+            </span>
+          </div>
+
+          <div className='flex flex-col items-end'>
+            <span className='text-[14px] text-[#263238] font-YekanBakhMedium'>
+              {Number(data.discount_price).toLocaleString("fa")} تومان
+            </span>
+            <span className='text-[14px] text-[#263238] font-YekanBakhMedium line-through'>
+              {Number(data.price).toLocaleString("fa")}
+            </span>
+          </div>
+        </div>
+      )}
+
+      <div className='h-[5px]'></div>
 
       <div className='w-full flex justify-between'>
-        <ProductEditIcon />
+        <Link href={`/danesh_admin/products/edit/${data.id}`}>
+          <div
+            className='min-h-[21px] flex items-center gap-[9px] cursor-pointer'
+            onMouseEnter={() => setShowEdit(true)}
+            onMouseLeave={() => setShowEdit(false)}
+          >
+            <ProductEditIcon color={showEdit ? "#007DFC" : "black"} />
+            <span
+              className={`${
+                showEdit ? "" : "hidden"
+              } text-[14px] text-black font-YekanBakhMedium`}
+            >
+              ویرایش
+            </span>
+          </div>
+        </Link>
 
-        <ProductAdminIcon />
+        <div
+          className='min-h-[21px] flex items-center gap-[9px] cursor-pointer'
+          onMouseEnter={() => setShowAdmin(true)}
+          onMouseLeave={() => setShowAdmin(false)}
+        >
+          <span
+            className={`${
+              showAdmin ? "" : "hidden"
+            } relative top-[3px] text-[14px] text-black font-YekanBakhMedium`}
+          >
+            {data.admin_username}
+          </span>
+          <ProductAdminIcon color={showAdmin ? "#007DFC" : "black"} />
+        </div>
       </div>
     </div>
   );

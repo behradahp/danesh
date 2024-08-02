@@ -68,7 +68,7 @@ export default function AdminLogin() {
   return (
     <main className='w-[100vw] h-[100vh] flex flex-col-reverse dsk:flex-row justify-center items-center bg-[#F8F8F8]'>
       {/* Login Form */}
-      <section className='w-[90vw] dsk:w-[496px] h-[372px] flex flex-col items-center gap-[26px] py-[32px] bg-white rounded-[20px] shadow-default'>
+      <section className='w-[90vw] dsk:w-[496px] h-[372px] flex flex-col items-center gap-[26px] py-[32px] bg-white'>
         {/* Title */}
         <span className='text-[18px] text-[#263238] font-YekanBakhMedium'>
           خوش آمدید
@@ -94,7 +94,7 @@ export default function AdminLogin() {
               id='username'
               name='username'
               autoComplete='on'
-              className='min-w-[300px] p-[10px] border border-[#9ACAEE] rounded-[10px] text-[14px] font-YekanBakhMedium'
+              className='min-w-[300px] p-[10px] border border-[#E0E0E0] rounded-[10px] text-[14px] font-YekanBakhMedium'
             />
 
             <label
@@ -108,7 +108,7 @@ export default function AdminLogin() {
               id='password'
               name='password'
               autoComplete='on'
-              className='min-w-[300px] p-[10px] border border-[#9ACAEE] rounded-[10px] text-[14px] font-YekanBakhMedium'
+              className='min-w-[300px] p-[10px] border border-[#E0E0E0] rounded-[10px] text-[14px] font-YekanBakhMedium'
             />
           </div>
 

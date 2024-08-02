@@ -1,4 +1,4 @@
-export default function ProductAdminIcon() {
+export default function ProductAdminIcon({ color }: { color: string }) {
   return (
     <svg
       xmlns='http://www.w3.org/2000/svg'
@@ -13,7 +13,7 @@ export default function ProductAdminIcon() {
           d='M16,21V19c0-2.209-1.343-4-3-4H7c-1.657,0-3,1.791-3,4v2'
           transform='translate(-4 -7)'
           fill='none'
-          stroke='#000'
+          stroke={color}
           stroke-linecap='round'
           stroke-linejoin='round'
           stroke-width='2'
@@ -26,7 +26,7 @@ export default function ProductAdminIcon() {
           r='4'
           transform='translate(2)'
           fill='none'
-          stroke='#000'
+          stroke={color}
           stroke-linecap='round'
           stroke-linejoin='round'
           stroke-width='2'

@@ -8,10 +8,21 @@
 
 ::-webkit-scrollbar {
   height: 7px;
-  width: 10px;
+  width: 7px;
 }
  
 ::-webkit-scrollbar-thumb {
   background: rgb(164, 192, 255); 
   border-radius: 10px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
 }

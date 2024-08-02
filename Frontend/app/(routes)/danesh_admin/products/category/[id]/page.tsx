@@ -6,6 +6,9 @@ import Link from "next/link";
 import { Audio } from "react-loader-spinner";
 import useClickOutside from "@/app/hooks/useClickOutside";
 
+// Constants
+import {url} from "@/app/constants/url";
+
 // Components
 import PanelLayout from "@/app/_components/admin_panel/panel_layout";
 import ProductCard from "@/app/_components/common/product_card";
@@ -89,9 +92,15 @@ export default function CategoryProducts({
     }
 
     switch (sortOptionValue) {
+      case "جدیدترین":
+        const result = products?.toSorted(
+          (a, b) => Date.parse(b.published_date) - Date.parse(a.published_date)
+        );
+        setSortResult(result);
+        break;
       case "ارزان ترین":
         const result1 = products?.toSorted(
-          (a, b) => Number(a.price) - Number(b.price)
+          (a, b) => Number(a.discount_price) - Number(b.discount_price)
         );
         setSortResult(result1);
         break;
@@ -158,7 +167,10 @@ export default function CategoryProducts({
                 >
                   حذف
                 </span>
-                <div className='w-full rounded-[7px] pr-[5px] cursor-not-allowed'>
+                <div
+                  className='w-full rounded-[7px] pr-[5px] hover:bg-[#C6D7FF]'
+                  onClick={() => setSortOptionValue("جدیدترین")}
+                >
                   <span className='text-[16px] text-[#263238] font-YekanBakhMedium'>
                     جدیدترین
                   </span>
@@ -209,7 +221,11 @@ export default function CategoryProducts({
                 if (index < 10) {
                   return (
                     <div key={item.id.toString()}>
-                      <ProductCard data={item} />
+                      <ProductCard
+                        data={item}
+                        url={url}
+                      />
+                      <span>111</span>
                     </div>
                   );
                 }
@@ -232,7 +248,10 @@ export default function CategoryProducts({
               {sortResult?.map((product) => {
                 return (
                   <div key={product.id.toString()}>
-                    <ProductCard data={product} />
+                    <ProductCard
+                      data={product}
+                      url={url}
+                    />
                   </div>
                 );
               })}
@@ -242,7 +261,10 @@ export default function CategoryProducts({
               {products?.map((product) => {
                 return (
                   <div key={product.id.toString()}>
-                    <ProductCard data={product} />
+                    <ProductCard
+                      data={product}
+                      url={url}
+                    />
                   </div>
                 );
               })}
@@ -252,7 +274,6 @@ export default function CategoryProducts({
               این دسته بندی محصولی ندارد!
             </span>
           )}
-          ;
         </div>
       </div>
     </PanelLayout>

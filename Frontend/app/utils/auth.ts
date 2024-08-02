@@ -4,9 +4,12 @@ import axios from "axios";
 import { jwtDecode, JwtPayload } from "jwt-decode";
 import { redirect } from "next/navigation";
 
+// Constants
+import {url} from "@/app/constants/url";
+
 // Create an axios instance
 const apiInstance = axios.create({
-  baseURL: "http://127.0.0.1:8000/",
+  baseURL: url,
   headers: {
     "Content-Type": "application/json",
   },
