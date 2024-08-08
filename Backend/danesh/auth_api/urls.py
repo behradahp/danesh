@@ -8,4 +8,5 @@ urlpatterns = [
     path('register/', views.RegisterView.as_view()),
     path('admin/login', views.AdminLoginView.as_view()),
     path('panel/', views.panel),
+    path('updateUser/<int:pk>/', views.update_profile),
 ]

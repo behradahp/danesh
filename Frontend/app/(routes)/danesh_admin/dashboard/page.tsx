@@ -1,30 +1,37 @@
 "use client";
+import { useEffect, useState } from "react";
+import { colorPalette } from "@/app/constants/color_palette";
+import axios from "axios";
+import { url } from "@/app/constants/url";
 
 // Components
 import PanelLayout from "@/app/_components/admin_panel/panel_layout";
+import Calendar from "@/app/_components/admin_panel/calendar";
+
+// Icons
 import CategoryIcon from "@/app/_components/icons/category_icon";
-import { useEffect, useState } from "react";
 
 // api
 import { productsCategoryCount } from "@/app/actions/actions";
-import { colorPalette } from "@/app/constants/color_palette";
 
-const selectedColors: number[] = []
+const selectedColors: number[] = [];
 
 export default function AdminDashboard() {
   const [categories, setCategories] = useState<ProductCount | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [note, setNote] = useState<string>("");
+  const [categoryColors, setCategoryColors] = useState<string[]>([])
 
   const handleRandomColor = () => {
-    if(selectedColors.length == colorPalette.length) selectedColors.length = 0
-    while(true) {
-      const index = Math.floor(Math.random()*colorPalette.length)
-      if(!selectedColors.includes(index)) {
+    if (selectedColors.length == colorPalette.length) selectedColors.length = 0;
+    while (true) {
+      const index = Math.floor(Math.random() * colorPalette.length);
+      if (!selectedColors.includes(index)) {
         selectedColors.push(index);
         return index;
       }
     }
-  }
+  };
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -33,10 +40,31 @@ export default function AdminDashboard() {
       setLoading(false);
 
       setCategories(res.data);
+
+      const list = [];
+      for(let item = 0; item < res.data.categories.length; item++) {
+        list.push(colorPalette[handleRandomColor()]);
+      }
+      console.log(list);
+      setCategoryColors(list);
     };
 
     fetchCategories();
+
+    const fetchNote = async () => {
+      const res = await axios.get(`${url}api/note/1`);
+
+      setNote(res.data.text);
+    };
+
+    fetchNote();
   }, []);
+
+  const handleNoteEdit = async () => {
+    const data = new FormData();
+    data.append("text", note);
+    const res = await axios.put(`${url}api/note/1/`, data);
+  };
 
   return (
     <PanelLayout section_id='1'>
@@ -54,7 +82,7 @@ export default function AdminDashboard() {
             <div>LOADING...</div>
           ) : categories ? (
             <>
-              {categories.all != 0 ? (
+              {true ? (
                 <div className='flex-shrink-0 w-[200px] h-[60px] flex justify-between items-center bg-white rounded-[8px] px-[10px] shadow-default'>
                   {/* ---------------------------- Icon ----------------------------------- */}
                   <div
@@ -86,7 +114,9 @@ export default function AdminDashboard() {
                     {/* ---------------------------- Icon ----------------------------------- */}
                     <div
                       className={`w-[30px] h-[30px] flex justify-center rounded-[100px]`}
-                      style={{ backgroundColor: colorPalette[handleRandomColor()] }}
+                      style={{
+                        backgroundColor: categoryColors[index],
+                      }}
                     >
                       <CategoryIcon color='white' />
                     </div>
@@ -112,17 +142,34 @@ export default function AdminDashboard() {
         <div className='h-[46px]'></div>
 
         {/* ---------------------------- Notes & Calendar ---------------------------- */}
-        <div className='w-[100%] flex gap-[20px]'>
+        <div className='w-[100%] flex justify-between'>
           {/* ---------------------------- Notes ---------------------------- */}
-          <div className='w-[450px] p-[20px] bg-white rounded-[10px]'>
-            <span className='tet-[16px] font-YekanBakhMedium'>یادداشت ها</span>
+          <div className='w-[530px] flex flex-col gap-[20px] py-[21px] px-[36px] bg-white rounded-[10px]'>
+            <div className='w-full flex justify-between'>
+              <span className='tet-[16px] font-YekanBakhMedium'>
+                یادداشت ها
+              </span>
+              <button
+                className='w-[145px] h-[24px] bg-[#6695FF] rounded-[10px] text-white font-YekanBakhMedium'
+                onClick={handleNoteEdit}
+              >
+                ثبت
+              </button>
+            </div>
 
             <textarea
               name=''
               id=''
-              className='min-h-[253px] w-full border border-[#EBEBEB] rounded-[10px] p-[10px]'
+              className='min-h-[253px] w-full border-2 border-[#EBEBEB] rounded-[10px] p-[10px]'
+              defaultValue={note}
+              value={note}
+              onChange={(e) => {
+                setNote(e.target.value);
+              }}
             />
           </div>
+
+          <Calendar />
         </div>
       </div>
     </PanelLayout>

@@ -1,4 +1,8 @@
+'use client'
+
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 // Images
 import logo from "@/public/images/logo.png";
@@ -46,12 +50,25 @@ const sections: Section[] = [
     id: 4,
     name: "درباره ما",
     icon: AboutIcon,
-    url: "/",
+    url: "/danesh_admin/about",
   },
 ];
 
 export default function PanelSidebar({ section_id }: { section_id: string }) {
+  const router = useRouter();
+
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState<boolean>(false);
+
+  const handleLogout = () => {
+    const res = logout();
+
+    if(res) {
+      router.push("/auth/admin_login");
+    }
+  }
+  
   return (
+    <>
     <aside className='hidden w-[307px] h-[100vh] dsk:flex flex-col items-center bg-white pt-[40px] pb-[52px] shadow-default'>
       {/* ------------------------ Logo ---------------------- */}
       <Image src={logo} alt='logo' />
@@ -87,7 +104,7 @@ export default function PanelSidebar({ section_id }: { section_id: string }) {
       <div className='flex-grow'></div>
       <div
         className={`w-[240px] h-[48px] flex items-center gap-[38px] pr-[21px] rounded-[10px] cursor-pointer hover:bg-[#c6d7ff50]`}
-        onClick={() => logout()}
+        onClick={() => setIsLogoutModalOpen(true)}
       >
         <LogoutIcon color='black' />
 
@@ -96,5 +113,17 @@ export default function PanelSidebar({ section_id }: { section_id: string }) {
         </span>
       </div>
     </aside>
+
+    <div className={`${isLogoutModalOpen ? '' : 'hidden'} absolute inset-0 w-fll h-full flex justify-center items-center bg-black/30 z-[100000000]`}>
+        <div className="w-[480px] h-[199px] flex flex-col items-center gap-[49px] py-[37px] px-[55px] bg-white border-1 border-[#707070]">
+          <span className="text-[16px] text-black font-YekanBakhMedium">آیا از خروج از حساب کاربری اطمینان داربد؟</span>
+
+          <div className="w-full flex justify-between">
+            <button className="w-[169px] h-[35px] flex justify-center items-center rounded-[10px] border border-[#707070] font-YekanBakhMedium" onClick={() => setIsLogoutModalOpen(false)}>انصراف</button>
+            <button className="w-[169px] h-[35px] flex justify-center items-center rounded-[10px] bg-[#6695FF] text-white font-YekanBakhMedium" onClick={handleLogout}>تایید</button>
+          </div>
+        </div>
+    </div>
+    </>
   );
 }

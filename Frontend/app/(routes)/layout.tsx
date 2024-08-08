@@ -1,6 +1,8 @@
 import "./globals.css";
-import { Provider as JotaiProvider } from "jotai";
 import { ToastContainer } from "react-toastify";
+import Image from "next/image";
+
+import mobileUnavailable from "@/public/images/mobile_unavailable.jpg";
 
 import {
   YekanBakhBold,
@@ -37,7 +39,27 @@ export default function RootLayout({
     >
       <body>
         <ToastContainer />
-        <JotaiProvider>{children}</JotaiProvider>
+        <div className='hidden dsk:block'>{children}</div>
+
+        <div className='dsk:hidden w-[100vw] h-[100vh] flex flex-col gap-[50px] justify-center items-center'>
+          <div className='w-[95%] h-[345px]'>
+            <Image
+              src={mobileUnavailable}
+              alt='mobileUnavailable'
+              width={0}
+              height={0}
+              sizes='100vw'
+              style={{ width: "100%", height: "100%" }}
+            />
+          </div>
+
+          <div className="flex flex-col items-center">
+            <span className='text-[25px] font-YekanBakhMedium'>
+              نسخه موبایل فعلا در دسترس نیست!
+            </span>
+            <span className='text-[30px] font-YekanBakhHeavy'>به زودی...</span>
+          </div>
+        </div>
       </body>
     </html>
   );

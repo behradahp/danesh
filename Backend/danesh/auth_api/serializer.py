@@ -1,10 +1,15 @@
-from .models import User
+from .models import User, Profile
 from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from rest_framework import serializers, status
-from rest_framework.validators import UniqueValidator
+from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from rest_framework.response import Response
+
+class ProfileUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ('first_name', 'last_name', 'phone', 'image')
+        extra_kwargs = {'image': {'default': 'user-default.png', 'required': False}}
+        partial = True
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -35,6 +40,7 @@ class AdminLoginSeializer(TokenObtainPairSerializer):
         else:
             token['first_name'] = user.profile.first_name
             token['last_name'] = user.profile.last_name
+            token['phone'] = user.profile.phone
             token['username'] = user.username
             token['email'] = user.email
             token['image'] = str(user.profile.image)

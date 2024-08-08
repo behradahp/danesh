@@ -1,11 +1,21 @@
 import json
 from rest_framework import serializers
-from .models import Category, Product, Image, Attribute
+from .models import Category, Product, Image, Attribute, Info, Note
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ["id", "name", "color"]
+
+class InfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Info
+        fields = ["id", "about", "email", "phone", "address"]
+
+class NoteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Note
+        fields = ["id", "text"]
 
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -47,15 +57,15 @@ class ProductSerializer(serializers.ModelSerializer):
         return product
     
     def update(self, instance, valid_data):
-        print("UPADETTTTEEEE")
         instance.category_id = valid_data['category_id']
         instance.name = valid_data['name']
         instance.description = valid_data['description']
-        instance.discount = valid_data['discount']
+        instance.discount_price = valid_data['discount_price']
         instance.price = valid_data['price']
         instance.admin_username = valid_data['admin_username']
         instance.lats_update_admin_username = valid_data['lats_update_admin_username']
-        instance.main_image = valid_data['main_image']
+        if 'main_image' in valid_data:
+            instance.main_image = valid_data['main_image']
 
         instance.images.clear()
         images_data = self.context['request'].FILES.getlist('images')
@@ -64,10 +74,14 @@ class ProductSerializer(serializers.ModelSerializer):
             instance.images.add(image)
 
         attributes_json_data = self.context['request'].data.get('attributes')
-        attributes_data = json.loads(attributes_json_data)
-        for attribute_data in attributes_data:
-            attribute = Attribute.objects.create(product=instance, key=attribute_data['key'], value=attribute_data['value'])
-            instance.attributes.add(attribute)
+
+        try:
+            attributes_data = json.loads(attributes_json_data)
+            for attribute_data in attributes_data:
+                attribute = Attribute.objects.create(product=instance, key=attribute_data['key'], value=attribute_data['value'])
+                instance.attributes.add(attribute)
+        except:
+            instance.attributes.clear()
 
         instance.save()
 

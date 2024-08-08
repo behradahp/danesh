@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
 
 // Components
 import PanelSidebar from "./panel_sidebar";
@@ -12,29 +12,39 @@ import { adminCheck } from "@/app/utils/adminCheck";
 export default function PanelLayout({
   children,
   section_id,
+  isUserPage,
 }: Readonly<{
   children: React.ReactNode;
   section_id: string;
+  isUserPage?: boolean;
 }>) {
-  const router = useRouter()
+  const router = useRouter();
   const pathname = usePathname();
+
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const checkAdminUser = async () => {
-      const response:
-        | {
-            success: boolean;
-            error: string;
-          }
-        | undefined = await adminCheck();
+      const response: {
+        success: boolean;
+        error: string;
+      } = await adminCheck();
+
+      console.log({ response: response });
 
       if (response && !response.success) {
         router.push("/auth/admin_login");
+      } else {
+        setLoading(false);
       }
     };
 
     checkAdminUser();
   }, [pathname]);
+
+  if (loading) {
+    return <div></div>;
+  }
 
   return (
     <>
@@ -45,7 +55,7 @@ export default function PanelLayout({
         {/* ------------------------ Header & Content ---------------------- */}
         <section className='w-[100%] dsk:max-w-[calc(100vw-307px)] h-[100vh] flex flex-col'>
           {/* ------------------------ Header ---------------------- */}
-          <PanelHeader />
+          <PanelHeader isUserPage={isUserPage == true ? true : false} />
 
           {/* ------------------------ Content ---------------------- */}
           {children}

@@ -26,6 +26,8 @@ interface UserData extends JwtPayload {
   last_name: string;
   username: string;
   image: string;
+  email: string;
+  phone: string;
 }
 
 export const adminLogin = async (data: {
@@ -48,7 +50,6 @@ export const adminLogin = async (data: {
       data: userData,
     };
   } catch (err: any) {
-    console.log(err.message);
     if (err.response && err.response.status == 401) {
       return {
         success: false,
@@ -65,19 +66,11 @@ export const adminLogin = async (data: {
 };
 
 export const logout = () => {
-  localStorage.removeItem("access_token");
-  localStorage.removeItem("refresh_token");
-
-  redirect("/auth/admin_login");
+  try {
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    return true;
+  } catch(err) {
+    return false;
+  }
 };
-
-// export const adminCheck = async () => {
-//   const response = await authFetch(
-//     "http://192.168.0.7:8000/auth/panel/",
-//     "GET"
-//   );
-
-//   if (!response?.success) {
-//     redirect("/danesh_admin/login");
-//   }
-// }

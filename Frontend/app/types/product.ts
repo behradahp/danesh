@@ -16,5 +16,6 @@ type Product = {
     attributes: Attribute[];
     published_date: string;
     admin_username: string;
+    last_update_date: string;
     lats_update_admin_username: string;
 }

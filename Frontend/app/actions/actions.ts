@@ -2,6 +2,7 @@ import axios from "axios";
 
 // Constants
 import {url} from "@/app/constants/url";
+import { adminCheck } from "../utils/adminCheck";
 
 // Create an axios instance
 const apiInstance = axios.create({
@@ -73,6 +74,60 @@ export const addCategory = async (data: FormData) => {
 export const deleteCategory = async ({ id }: { id: string }) => {
   try {
     const response = await apiInstance.delete(`categories/${id}/`);
+
+    return {
+      success: true,
+      data: response.data,
+      error: "",
+    };
+  } catch (err: any) {
+    return {
+      success: false,
+      data: null,
+      error: JSON.stringify(err),
+    };
+  }
+};
+
+export const editCategory = async ({ id, data }: { id: string, data: FormData }) => {
+  try {
+    const response = await apiInstance.put(`categories/${id}/`, data);
+
+    return {
+      success: true,
+      data: response.data,
+      error: "",
+    };
+  } catch (err: any) {
+    return {
+      success: false,
+      data: null,
+      error: JSON.stringify(err),
+    };
+  }
+};
+
+export const getInfo = async () => {
+  try {
+    const response = await apiInstance.get(`about/1/`);
+
+    return {
+      success: true,
+      data: response.data,
+      error: "",
+    };
+  } catch (err: any) {
+    return {
+      success: false,
+      data: null,
+      error: JSON.stringify(err),
+    };
+  }
+};
+
+export const editInfo = async ({ data }: { data: FormData }) => {
+  try {
+    const response = await apiInstance.put(`about/1/`, data);
 
     return {
       success: true,
@@ -189,6 +244,24 @@ export const editProduct = async ({ id, data }: { id: string, data: FormData }) 
         "Content-Type": "multipart/form-data",
       },
     });
+
+    return {
+      success: true,
+      data: null,
+      error: "",
+    };
+  } catch (err: any) {
+    return {
+      success: false,
+      data: null,
+      error: JSON.stringify(err),
+    };
+  }
+};
+
+export const deleteProduct = async ({ id }: { id: string }) => {
+  try {
+    await axios.delete(`${url}api/products/${id}/`);
 
     return {
       success: true,

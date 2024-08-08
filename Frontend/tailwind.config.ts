@@ -15,6 +15,7 @@ const config: Config = {
 
     boxShadow: {
       default: '0 3px 6px rgb(0, 0, 0, 0.16)',
+      header: '0 2px 0px rgb(0, 0, 0, 0.16)',
     },
 
     fontFamily: {

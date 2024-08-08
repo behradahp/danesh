@@ -25,6 +25,7 @@ import {
   addCategory,
   createProduct,
   deleteCategory,
+  editCategory,
   getCategories,
 } from "@/app/actions/actions";
 
@@ -32,7 +33,7 @@ interface ProductData {
   category_id: Number;
   name: string;
   description: string;
-  discount: string;
+  discount_price: string;
   price: string;
 }
 
@@ -50,13 +51,15 @@ interface MainImage {
   url: string;
 }
 
-const ATTRIBUTESCOUNT = 7;
-
 export default function AddProduct() {
   const ref = useRef<HTMLDivElement>(null);
 
   useClickOutside(ref, () => {
     setIsCategoryOptionsOpen(false);
+    setAddCategoryMode(false);
+    setEditCategoryMode(false);
+    setEditCategoryValue(null);
+    setEditCategoryId(null);
   });
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -66,6 +69,7 @@ export default function AddProduct() {
   const [showedImage, setShowedImage] = useState<string>("");
   const [mainImage, setMainImage] = useState<MainImage | null>(null);
   const [isImagesModalOpen, setIsImagesModalOpen] = useState<boolean>(false);
+  const [addImageHover, setAddImageHover] = useState<boolean>(false);
 
   const handleAddImages = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -138,7 +142,13 @@ export default function AddProduct() {
   const [isCategoryOptionsOpen, setIsCategoryOptionsOpen] =
     useState<boolean>(false);
   const [addCategoryMode, setAddCategoryMode] = useState<boolean>(false);
+  const [editCategoryMode, setEditCategoryMode] = useState<boolean>(false);
+  const [editCategoryId, setEditCategoryId] = useState<Number | null>(null);
+  const [editCategoryValue, setEditCategoryValue] = useState<string | null>(
+    null
+  );
   const [newCategoryName, setNewCategoryName] = useState<string>("");
+  const [editCategoryHover, setEditCategoryHover] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -193,19 +203,7 @@ export default function AddProduct() {
   };
 
   const handleDeleteCatgory = async () => {
-    if (!categories) {
-      toast.error("چنین دسته بندی وجود ندارد!", {
-        position: "top-right",
-        autoClose: 5000,
-        transition: Bounce,
-        closeOnClick: true,
-        hideProgressBar: false,
-        pauseOnHover: false,
-      });
-      return;
-    }
-
-    if (!newCategoryName) {
+    if (editCategoryId == null) {
       toast.error("اسم دسته بندی خالی است!", {
         position: "top-right",
         autoClose: 5000,
@@ -217,16 +215,35 @@ export default function AddProduct() {
       return;
     }
 
-    let category_id = "-1";
+    const res = await deleteCategory({ id: editCategoryId.toString() });
 
-    for (let category of categories) {
-      if (newCategoryName == category.name) {
-        category_id = category.id.toString();
+    if (res.success) {
+      const catgRes = await getCategories();
+
+      if (catgRes.success) {
+        setCategories(catgRes.data);
       }
+
+      setEditCategoryMode(false);
+      setEditCategoryValue(null);
+      setEditCategoryId(null);
+
+      return;
     }
 
-    if (category_id == "-1") {
-      toast.error("چنین دسته بندی وجود ندارد!", {
+    toast.error("مشکلی پیش آمده. لطفا دوباره تلاش کنید!", {
+      position: "top-right",
+      autoClose: 5000,
+      transition: Bounce,
+      closeOnClick: true,
+      hideProgressBar: false,
+      pauseOnHover: false,
+    });
+  };
+
+  const handleEditCatgory = async () => {
+    if (editCategoryId == null) {
+      toast.error("اسم دسته بندی خالی است!", {
         position: "top-right",
         autoClose: 5000,
         transition: Bounce,
@@ -237,7 +254,9 @@ export default function AddProduct() {
       return;
     }
 
-    const res = await deleteCategory({ id: category_id });
+    const data = new FormData();
+    data.append("name", editCategoryValue!);
+    const res = await editCategory({ id: editCategoryId.toString(), data });
 
     if (res.success) {
       const catgRes = await getCategories();
@@ -246,7 +265,9 @@ export default function AddProduct() {
         setCategories(catgRes.data);
       }
 
-      setAddCategoryMode(false);
+      setEditCategoryMode(false);
+      setEditCategoryValue(null);
+      setEditCategoryId(null);
 
       return;
     }
@@ -294,6 +315,29 @@ export default function AddProduct() {
     setWordifyPrice(wordifyRialsInTomans(newValue + "0"));
   };
 
+  const [discountPriceQuery, setDiscountPriceQuery] = useState<string>("");
+  const [discountPriceValue, setDiscountPriceValue] = useState<string>("");
+  const [wordifyDiscountPrice, setWordifyDiscountPrice] = useState<string>("");
+
+  const handleDiscountPriceQuery = (e: ChangeEvent<HTMLInputElement>) => {
+    const x: PriceInputEvent = e.nativeEvent;
+
+    if (x.data === undefined) return;
+
+    let newValue = "";
+    if (x.data) {
+      newValue = discountPriceValue + x.data;
+    } else if (discountPriceValue.length != 0) {
+      newValue = discountPriceValue.slice(0, discountPriceValue.length - 1);
+    } else {
+      newValue = "";
+    }
+    setDiscountPriceValue(newValue);
+    setProductData({ ...productData, discount_price: newValue });
+    setDiscountPriceQuery(Number(newValue).toLocaleString("fa"));
+    setWordifyDiscountPrice(wordifyRialsInTomans(newValue + "0"));
+  };
+
   const [productAttributes, setProductAttributes] = useState<Attribute[]>([]);
   const [isAddAttributesOpen, setIsAddAttributesOpen] =
     useState<boolean>(false);
@@ -302,6 +346,7 @@ export default function AddProduct() {
   const [attributeEditValue, setAttributeEditValue] = useState<number | null>(
     null
   );
+  const [addAttributeHover, setAddAttributeHove] = useState<boolean>(false);
 
   const handleAddAttribute = () => {
     if (!attributeKey) {
@@ -366,7 +411,7 @@ export default function AddProduct() {
     category_id: -1,
     name: "",
     description: "",
-    discount: "",
+    discount_price: "",
     price: "",
   });
 
@@ -430,7 +475,7 @@ export default function AddProduct() {
         productData.description ? productData.description : " No description"
       );
       formData.append("price", productData.price);
-      formData.append("discount", productData.discount ?? '0');
+      formData.append("discount_price", productData.discount_price ?? "0");
 
       const userJson = localStorage.getItem("user");
       if (!userJson) {
@@ -483,7 +528,7 @@ export default function AddProduct() {
           category_id: -1,
           name: "",
           description: "",
-          discount: "",
+          discount_price: "",
           price: "",
         });
 
@@ -576,8 +621,12 @@ export default function AddProduct() {
                     multiple
                     onChange={(e) => handleAddImages(e)}
                   />
-                  <div className='w-[150px] h-[160px] flex justify-center items-center border border-dashed border-[#707070] rounded-[10px] cursor-pointer hover:border-solid hover:border-[#C6D7FF]'>
-                    <AddImageIcon />
+                  <div
+                    className='w-[150px] h-[160px] flex justify-center items-center border border-dashed border-[#707070] rounded-[10px] cursor-pointer hover:border-solid hover:border-[#C6D7FF]'
+                    onMouseEnter={() => setAddImageHover(true)}
+                    onMouseLeave={() => setAddImageHover(false)}
+                  >
+                    <AddImageIcon color={addImageHover ? "#6695FF" : undefined}/>
                   </div>
                 </label>
 
@@ -622,7 +671,10 @@ export default function AddProduct() {
                 </div>
 
                 {/* Main Image */}
-                <div className='w-[150px] h-[160px] border border-[#EBEBEB] rounded-[10px] p-[3px]' onClick={() => setIsImagesModalOpen(true)}>
+                <div
+                  className='w-[150px] h-[160px] border border-[#EBEBEB] rounded-[10px] p-[3px]'
+                  onClick={() => setIsImagesModalOpen(true)}
+                >
                   {mainImage != null ? (
                     <Image
                       loader={() => mainImage.url}
@@ -679,16 +731,20 @@ export default function AddProduct() {
                     isCategoryOptionsOpen ? "" : "hidden"
                   } absolute left-0 top-[40px] w-full flex flex-col gap-[10px] p-[10px] bg-white rounded-[10px] shadow-default z-20`}
                 >
-                  {categories?.map((category) => {
+                  {categories?.map((category, index) => {
                     return (
                       <div
                         key={category.id.toString()}
                         className='w-full p-[5px] hover:bg-[#C6D7FF] rounded-[5px] cursor-pointer'
-                        onClick={() =>
-                          setProductData({
-                            ...productData,
-                            category_id: category.id,
-                          })
+                        onClick={(e) =>
+                          !editCategoryMode
+                            ? setProductData({
+                                ...productData,
+                                category_id: category.id,
+                              })
+                            : (setEditCategoryId(category.id),
+                              setEditCategoryValue(category.name),
+                              e.stopPropagation())
                         }
                       >
                         <span className='text-[16px] text-black font-YekanBakhMedium'>
@@ -700,7 +756,7 @@ export default function AddProduct() {
 
                   <div
                     className={`${
-                      addCategoryMode ? "hidden" : ""
+                      addCategoryMode || editCategoryMode ? "hidden" : ""
                     } flex items-center gap-[10px] text-[#4E5A60] hover:text-[#87abff]`}
                     onClick={(e) => {
                       e.stopPropagation();
@@ -713,6 +769,26 @@ export default function AddProduct() {
                     <span className='text-[25px] font-YekanBakhMedium'>+</span>
                   </div>
 
+                  <div
+                    className={`${
+                      addCategoryMode || editCategoryMode ? "hidden" : ""
+                    } flex items-center gap-[10px] text-[#4E5A60] hover:text-[#87abff]`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setEditCategoryMode(true);
+                    }}
+                    onMouseEnter={() => setEditCategoryHover(true)}
+                    onMouseLeave={() => setEditCategoryHover(false)}
+                  >
+                    <span className='text-[16px] font-YekanBakhMedium'>
+                      ویرایش دسته بندی
+                    </span>
+                    <EditIcon
+                      color={editCategoryHover ? "#87abff" : "#4E5A60"}
+                      size='17px'
+                    />
+                  </div>
+
                   <div className={`${addCategoryMode ? "" : "hidden"}`}>
                     <span className='text-[16px] font-YekanBakhMedium text-[#4E5A60]'>
                       دسته بندی جدید
@@ -722,9 +798,59 @@ export default function AddProduct() {
 
                     <input
                       type='text'
-                      className='w-full bg-white border border-[#4E5A60] rounded-[10px] p-[5px]'
+                      className='w-full bg-white border border-[#E0E0E0] rounded-[10px] p-[5px]'
                       onClick={(e) => e.stopPropagation()}
                       onChange={(e) => setNewCategoryName(e.target.value)}
+                      value={newCategoryName}
+                    />
+
+                    <div className='h-[26px]'></div>
+
+                    <div className='w-ful flex justify-evenly'>
+                      <button
+                        className={
+                          "w-[169px] h-[35px] flex justify-center items-center rounded-[10px] border border-[#4E5A60]"
+                        }
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setAddCategoryMode(false);
+                          setNewCategoryName("");
+                        }}
+                      >
+                        <span className='text-[14px] text-[#4E5A60] font-YekanBakhMedium'>
+                          حذف
+                        </span>
+                      </button>
+                      <button
+                        className='w-[169px] h-[35px] flex justify-center items-center rounded-[10px] bg-[#6695FF]'
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleAddCatgory();
+                        }}
+                      >
+                        <span className='text-[14px] text-white font-YekanBakhMedium'>
+                          تایید
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className={`${editCategoryMode ? "" : "hidden"}`}>
+                    <span className='text-[16px] font-YekanBakhMedium text-[#4E5A60]'>
+                      دسته بندی مورد نظر را انتخاب کنید
+                    </span>
+
+                    <div className='h-[8px]'></div>
+
+                    <input
+                      type='text'
+                      className='w-full bg-white border border-[#E0E0E0] rounded-[10px] p-[5px]'
+                      onClick={(e) => e.stopPropagation()}
+                      onChange={(e) => {
+                        setEditCategoryValue(e.target.value);
+                      }}
+                      disabled={editCategoryId == null ? true : false}
+                      value={editCategoryId == null ? "" : editCategoryValue!}
                     />
 
                     <div className='h-[26px]'></div>
@@ -747,7 +873,7 @@ export default function AddProduct() {
                         className='w-[169px] h-[35px] flex justify-center items-center rounded-[10px] bg-[#6695FF]'
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleAddCatgory();
+                          handleEditCatgory();
                         }}
                       >
                         <span className='text-[14px] text-white font-YekanBakhMedium'>
@@ -792,16 +918,28 @@ export default function AddProduct() {
                 قیمت پس از تخفیف
               </span>
 
-              <input
-                type='text'
-                className='w-full border border-[#E0E0E0] rounded-[10px] p-[5px] text-[16px] font-YekanBakhMedium'
-                value={(
-                  Number(productData.price) -
-                  Number(productData.price) *
-                    (Number(productData.discount) / 100)
-                ).toLocaleString("fa")}
-                disabled
-              />
+              <div className='relative'>
+                <input
+                  type='number'
+                  className='relative w-full border border-[#E0E0E0] bg-transparent text-transparent rounded-[10px] p-[5px] z-10'
+                  value={productData.discount_price}
+                  onChange={(e) => handleDiscountPriceQuery(e)}
+                />
+
+                <div className='absolute inset-0 w-full h-full rounded-[10px] p-[5px]'>
+                  <span className='font-YekanBakhMedium text-[18px]'>
+                    {discountPriceQuery == "" || discountPriceQuery == "۰"
+                      ? ""
+                      : discountPriceQuery}
+                  </span>
+                </div>
+              </div>
+
+              <span className='text-[14px] text-green-700 font-YekanBakhMedium'>
+                {wordifyDiscountPrice == "صفر تومان"
+                  ? ""
+                  : wordifyDiscountPrice}
+              </span>
 
               {/* ---------------------------- Product Discount ----------------------------------- */}
               <div className='h-[20px]'></div>
@@ -815,14 +953,20 @@ export default function AddProduct() {
                   type='number'
                   max={100}
                   min={0}
-                  value={productData.discount}
-                  className='w-full border border-[#E0E0E0] rounded-[10px] p-[5px] pr-[25px] text-[16px] font-YekanBakhMedium'
-                  onChange={(e) =>
-                    setProductData({
-                      ...productData,
-                      discount: e.target.value,
-                    })
+                  value={
+                    productData.discount_price == ""
+                      ? "0"
+                      : productData.price === "0" || productData.price === ""
+                      ? ""
+                      : Math.floor(
+                          ((Number(productData.price) -
+                            Number(productData.discount_price)) /
+                            Number(productData.price)) *
+                            100
+                        )
                   }
+                  className='w-full border border-[#E0E0E0] rounded-[10px] p-[5px] pr-[25px] text-[16px] font-YekanBakhMedium'
+                  disabled
                 />
 
                 <span className='absolute right-2 text-[14px] font-YekanBakhBold'>
@@ -868,7 +1012,7 @@ export default function AddProduct() {
                 </div>
                 {productAttributes.map((item, index) => {
                   return (
-                    <div key={index} className='relative flex bg-slate-500/5'>
+                    <div key={index} className='relative flex'>
                       <div className='w-[145.5px] h-[48.5px] flex justify-center items-center border-b-2 border-l-2 border-[#E0E0E0]'>
                         <span className='text-[16px] text-black font-YekanBakhMedium'>
                           {item.key}
@@ -888,7 +1032,7 @@ export default function AddProduct() {
                             setIsAddAttributesOpen(true);
                           }}
                         >
-                          <EditIcon />
+                          <EditIcon color='#6695FF' />
                         </div>
                       </div>
                     </div>
@@ -897,9 +1041,17 @@ export default function AddProduct() {
                 <div
                   className='w-full h-[48.5px] flex items-center justify-center gap-[31.8px] cursor-pointer'
                   onClick={() => setIsAddAttributesOpen(true)}
+                  onMouseEnter={() => setAddAttributeHove(true)}
+                  onMouseLeave={() => setAddAttributeHove(false)}
                 >
-                  <AddImageIcon />
-                  <span className='text-[16px] text-[#4E5A60] font-YekanBakhMedium'>
+                  <AddImageIcon
+                    color={addAttributeHover ? "#6695FF" : undefined}
+                  />
+                  <span
+                    className={`text-[16px] ${
+                      addAttributeHover ? "text-[#6695FF]" : "text-[#4E5A60]"
+                    } font-YekanBakhMedium`}
+                  >
                     اضافه کردن ویژگی
                   </span>
                 </div>
@@ -940,7 +1092,7 @@ export default function AddProduct() {
         </div>
 
         {/* Other Images */}
-        <div className='max-w-[800px] flex gap-[10px] overflow-x-auto overflow-y-auto pb-[10px] pt-[20px] pr-[10px] pl-[10px]'>
+        <div className='w-[800px] max-w-[800px] flex gap-[10px] overflow-x-auto overflow-y-auto pb-[10px] pt-[20px] pr-[10px] pl-[10px]'>
           <div
             className={`relative border-2 border-[#b69a67] p-[5px] rounded-[10px] cursor-pointer`}
             onClick={() =>

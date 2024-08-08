@@ -25,6 +25,8 @@ export default function AllProducts() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [searchResults, setSearchResults] = useState<Product[] | null>(null);
 
+  const [showAllLinkHoverIndex, setShowAllLinkHoverIndex] = useState<Number | null>(null);
+
   useEffect(() => {
     const fetchCategories = async () => {
       setLoading(true);
@@ -136,12 +138,12 @@ export default function AllProducts() {
               همه‌ محصولات
             </span>
 
-            <Link href={""}>
-              <div className='flex items-center gap-[10px]'>
-                <span className='text-[16px] text-[#263238] font-YekanBakhMedium'>
+            <Link href={"/danesh_admin/products/all_products"} className={`${products && products.length != 0 ? '' : 'hidden'}`}>
+              <div className='flex items-center gap-[10px]' onMouseEnter={() => setShowAllLinkHoverIndex(-1)} onMouseLeave={() => setShowAllLinkHoverIndex(null)}>
+                <span className={`text-[16px] ${showAllLinkHoverIndex === -1 ? 'text-[#007DFC]' : 'text-[#263238]'} font-YekanBakhMedium`}>
                   مشاهده همه{" "}
                 </span>
-                <LeftChevron color='#263238' />
+                <LeftChevron color={showAllLinkHoverIndex === -1 ? '#007DFC' : '#263238'} />
               </div>
             </Link>
           </div>
@@ -172,7 +174,7 @@ export default function AllProducts() {
           {loading ? (
             <Audio height={20} width={20} color='black' />
           ) : categories && categories.length != 0 ? (
-            categories.map((item) => {
+            categories.map((item, index) => {
               let productIndex = 0;
               return (
                 <>
@@ -183,11 +185,11 @@ export default function AllProducts() {
                       </span>
 
                       <Link href={`/danesh_admin/products/category/${item.id}`}>
-                        <div className='flex items-center gap-[10px]'>
-                          <span className='text-[16px] text-[#263238] font-YekanBakhMedium'>
+                        <div className='flex items-center gap-[10px]' onMouseEnter={() => setShowAllLinkHoverIndex(index)} onMouseLeave={() => setShowAllLinkHoverIndex(null)}>
+                        <span className={`text-[16px] ${showAllLinkHoverIndex === index ? 'text-[#007DFC]' : 'text-[#263238]'} font-YekanBakhMedium`}>
                             مشاهده همه{" "}
                           </span>
-                          <LeftChevron color='#263238' />
+                          <LeftChevron color={showAllLinkHoverIndex === index ? '#007DFC' : '#263238'} />
                         </div>
                       </Link>
                     </div>

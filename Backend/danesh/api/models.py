@@ -15,7 +15,7 @@ class Product(models.Model):
     category_id = models.IntegerField()
     name = models.CharField(max_length=100)
     description = models.TextField()
-    discount = models.FloatField(default=0)
+    discount_price = models.IntegerField(default=0)
     price = models.IntegerField()
     main_image = models.ImageField(null=True)
     images = models.ManyToManyField(Image)
@@ -26,7 +26,30 @@ class Product(models.Model):
     lats_update_admin_username= models.CharField(max_length=100)
 
     @property
-    def discount_price(self):
-        return self.price - (self.price * (self.discount / 100))
+    def discount(self):
+        if self.discount_price == 0:
+            return 0
+        
+        return int(((self.price - self.discount_price) / self.price) * 100)
     
+    def delete(self, *args, **kwargs):
+        # Delete related Image objects and their files
+        for image in self.images.all():
+            image.image.delete()
+            image.delete()
+        
+        if self.main_image:
+            self.main_image.delete()
+
+        super().delete(*args, **kwargs)
+    
+class Info(models.Model):
+    about = models.TextField(blank=True)
+    email = models.CharField(max_length=100, blank=True)
+    phone = models.CharField(max_length=100, blank=True)
+    address = models.TextField(blank=True)
+
+class Note(models.Model):
+    text = models.TextField(blank=True)
+
 

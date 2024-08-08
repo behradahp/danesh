@@ -8,17 +8,16 @@ class User(AbstractUser):
     email = models.EmailField(unique=True)
 
     USERNAME_FIELD = 'username'
-    # REQUIRED_FIELDS = ['username']
-
 
     def profile(self):
         profile = Profile.objects.get(user=self)
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    first_name = models.CharField(max_length=1000)
-    last_name = models.CharField(max_length=1000)
-    image = models.ImageField(upload_to="user_images", default="default.jpg")
+    first_name = models.CharField(max_length=1000, blank=True)
+    last_name = models.CharField(max_length=1000, blank=True)
+    image = models.ImageField(default="user-default.png")
+    phone = models.CharField(max_length=100, blank=True)
 
 
 def create_user_profile(sender, instance, created, **kwargs):

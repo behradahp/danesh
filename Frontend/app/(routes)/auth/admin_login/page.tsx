@@ -57,6 +57,8 @@ export default function AdminLogin() {
         last_name: response.data!.last_name,
         username: response.data!.username,
         image: response.data!.image,
+        email: response.data!.email,
+        phone: response.data!.phone,
       };
 
       localStorage.setItem("user", JSON.stringify(userData));

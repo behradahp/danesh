@@ -1,4 +1,4 @@
-export default function AddImageIcon() {
+export default function AddImageIcon({color} : {color?:string}) {
   return (
     <svg
       xmlns='http://www.w3.org/2000/svg'
@@ -15,7 +15,7 @@ export default function AddImageIcon() {
           r='10'
           transform='translate(2 2)'
           fill='none'
-          stroke='#4e5a60'
+          stroke={color ?? '#4e5a60'}
           stroke-linecap='round'
           stroke-linejoin='round'
           stroke-width='2'
@@ -27,7 +27,7 @@ export default function AddImageIcon() {
           y2='8'
           transform='translate(12 8)'
           fill='none'
-          stroke='#4e5a60'
+          stroke={color ?? '#4e5a60'}
           stroke-linecap='round'
           stroke-linejoin='round'
           stroke-width='2'
@@ -38,7 +38,7 @@ export default function AddImageIcon() {
           x2='8'
           transform='translate(8 12)'
           fill='none'
-          stroke='#4e5a60'
+          stroke={color ?? '#4e5a60'}
           stroke-linecap='round'
           stroke-linejoin='round'
           stroke-width='2'
