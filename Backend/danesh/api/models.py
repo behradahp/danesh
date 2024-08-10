@@ -20,6 +20,7 @@ class Product(models.Model):
     main_image = models.ImageField(null=True)
     images = models.ManyToManyField(Image)
     attributes = models.ManyToManyField(Attribute)
+    brand = models.CharField(max_length=100, blank=True)
     published_date = models.DateTimeField(auto_now_add=True)
     admin_username = models.CharField(max_length=100)
     last_update_date = models.DateTimeField(auto_now=True)

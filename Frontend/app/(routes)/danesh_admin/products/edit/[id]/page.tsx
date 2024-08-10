@@ -85,6 +85,8 @@ export default function EditProduct({ params }: { params: { id: string } }) {
   const [productAttributes, setProductAttributes] = useState<Attribute[]>([]);
   const [addImageHover, setAddImageHover] = useState<boolean>(false);
 
+  const [brandValue, setBrandValue] = useState<string>("");
+
   useEffect(() => {
     const fetchProduct = async () => {
       const res = await getProduct({ id: params.id });
@@ -111,6 +113,8 @@ export default function EditProduct({ params }: { params: { id: string } }) {
         setWordifyDiscountPrice(
           wordifyRialsInTomans(res.data.discount_price + "0")
         );
+
+        setBrandValue(res.data.brand);
 
         const images: string[] = [];
         const imageFiles: File[] = [];
@@ -560,6 +564,7 @@ export default function EditProduct({ params }: { params: { id: string } }) {
       );
       formData.append("price", productData.price);
       formData.append("discount_price", productData.discount_price ?? "0");
+      formData.append("brand", brandValue);
 
       const userJson = localStorage.getItem("user");
       if (!userJson) {
@@ -1110,6 +1115,30 @@ export default function EditProduct({ params }: { params: { id: string } }) {
                     </span>
                   </div>
                 </div>
+                <div className='relative flex'>
+                  <div className='w-[145.5px] h-[48.5px] flex justify-center items-center border-b-2 border-l-2 border-[#E0E0E0]'>
+                    <span className='text-[16px] text-black font-YekanBakhMedium'>
+                      برند
+                    </span>
+                  </div>
+                  <div className='flex-grow h-[48.5px] flex justify-center items-center border-b-2 border-[#E0E0E0]'>
+                    <span className='text-[16px] text-black font-YekanBakhMedium'>
+                      {brandValue}
+                    </span>
+                  </div>
+
+                  <div className='absolute inset-0 w-full h-full flex items-center pr-[130.5px] opacity-[0.01] hover:opacity-[1] transition-all ease-linear duration-200'>
+                    <div
+                      className='w-[30px] h-[30px] flex justify-center items-center border border-[#4e5a60] rounded-[5px] hover:bg-[#c1d1da8a] transition-all ease-linear duration-150 cursor-pointer'
+                      onClick={() => {
+                        setAttributeEditValue(100);
+                        setIsAddAttributesOpen(true);
+                      }}
+                    >
+                      <EditIcon color='#6695FF' />
+                    </div>
+                  </div>
+                </div>
                 {productAttributes.map((item, index) => {
                   return (
                     <div key={index} className='relative flex'>
@@ -1293,11 +1322,14 @@ export default function EditProduct({ params }: { params: { id: string } }) {
             className='w-[426px] border border-[#E0E0E0] rounded-[10px] p-[5px] font-YekanBakhMedium'
             onChange={(e) => setAttributeKey(e.target.value)}
             defaultValue={
-              attributeEditValue != null &&
-              productAttributes[attributeEditValue] != undefined
+              attributeEditValue == 100
+                ? "برند"
+                : attributeEditValue != null &&
+                  productAttributes[attributeEditValue] != undefined
                 ? productAttributes[attributeEditValue!].key
                 : ""
             }
+            disabled={attributeEditValue == 100 ? true : false}
           />
 
           <span className='text-[16px] text-[#4E5A60] font-YekanBakhMedium mt-[10px]'>
@@ -1307,10 +1339,18 @@ export default function EditProduct({ params }: { params: { id: string } }) {
           <input
             type='text'
             className='w-[426px] border border-[#E0E0E0] rounded-[10px] p-[5px] font-YekanBakhMedium'
-            onChange={(e) => setAttributeValue(e.target.value)}
+            onChange={(e) => {
+              if (attributeEditValue == 100) {
+                setBrandValue(e.target.value);
+              } else {
+                setAttributeValue(e.target.value);
+              }
+            }}
             defaultValue={
-              attributeEditValue != null &&
-              productAttributes[attributeEditValue] != undefined
+              attributeEditValue == 100
+                ? brandValue
+                : attributeEditValue != null &&
+                  productAttributes[attributeEditValue] != undefined
                 ? productAttributes[attributeEditValue!].value
                 : ""
             }
@@ -1333,6 +1373,7 @@ export default function EditProduct({ params }: { params: { id: string } }) {
 
                 setIsAddAttributesOpen(false);
               }}
+              disabled={attributeEditValue == 100 ? true : false}
             >
               <span className='text-[14px] text-[#4E5A60] font-YekanBakhMedium'>
                 حذف
@@ -1341,7 +1382,12 @@ export default function EditProduct({ params }: { params: { id: string } }) {
             <button
               className='w-[169px] h-[35px] flex justify-center items-center rounded-[10px] bg-[#6695FF]'
               onClick={
-                attributeEditValue != null
+                attributeEditValue == 100
+                  ? () => {
+                      setIsAddAttributesOpen(false);
+                      setAttributeEditValue(null);
+                    }
+                  : attributeEditValue != null
                   ? handleEditAttribute
                   : handleAddAttribute
               }

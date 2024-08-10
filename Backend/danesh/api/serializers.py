@@ -33,7 +33,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ["id", "category_id", "name", "description", "discount", "price", "discount_price", "main_image", "images", "attributes", "published_date", "admin_username", "last_update_date", "lats_update_admin_username"]
+        fields = ["id", "category_id", "name", "description", "discount", "price", "discount_price", "main_image", "images", "attributes", "brand", "published_date", "admin_username", "last_update_date", "lats_update_admin_username"]
 
     def create(self, validated_data):
         images_data = self.context['request'].FILES.getlist('images')
@@ -62,6 +62,7 @@ class ProductSerializer(serializers.ModelSerializer):
         instance.description = valid_data['description']
         instance.discount_price = valid_data['discount_price']
         instance.price = valid_data['price']
+        instance.brand = valid_data['brand']
         instance.admin_username = valid_data['admin_username']
         instance.lats_update_admin_username = valid_data['lats_update_admin_username']
         if 'main_image' in valid_data:
