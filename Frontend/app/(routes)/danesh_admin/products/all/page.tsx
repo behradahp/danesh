@@ -8,7 +8,7 @@ import { Audio } from "react-loader-spinner";
 
 // Components
 import PanelLayout from "@/app/_components/admin_panel/panel_layout";
-import ProductCard from "@/app/_components/common/product_card";
+import ProductCard from "@/app/_components/common/cards/admin_product_card";
 
 // Icons
 import SearchIcon from "@/app/_components/icons/search_icon";

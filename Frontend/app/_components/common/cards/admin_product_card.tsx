@@ -13,7 +13,7 @@ import ProductAdminIcon from "@/app/_components/icons/product_admin_icon";
 import defaultImage from "@/public/images/default-image.jpg";
 import {toFarsiDigits} from "@/app/functions/toEnglishDigits";
 
-export default function ProductCard({
+export default function AdminProductCard({
   data,
   url = "",
 }: {
