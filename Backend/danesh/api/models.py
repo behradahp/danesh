@@ -21,6 +21,7 @@ class Product(models.Model):
     images = models.ManyToManyField(Image)
     attributes = models.ManyToManyField(Attribute)
     brand = models.CharField(max_length=100, blank=True)
+    stock = models.BooleanField()
     published_date = models.DateTimeField(auto_now_add=True)
     admin_username = models.CharField(max_length=100)
     last_update_date = models.DateTimeField(auto_now=True)

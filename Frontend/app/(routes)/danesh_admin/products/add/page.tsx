@@ -1,5 +1,8 @@
 "use client";
 
+// Styles
+import "./style.css";
+
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import useClickOutside from "@/app/hooks/useClickOutside";
 import Image from "next/image";
@@ -407,6 +410,8 @@ export default function AddProduct() {
     setAttributeEditValue(null);
   };
 
+  const [isStock, setIsStock] = useState<boolean>(false);
+
   const [brandValue, setBrandValue] = useState<string>("");
 
   const [productData, setProductData] = useState<ProductData>({
@@ -455,18 +460,6 @@ export default function AddProduct() {
       });
     }
 
-    if (Number(productData.price) == 0) {
-      error = true;
-      toast.error("قیمت محصول نمیتواند صفر باشد!", {
-        position: "top-right",
-        autoClose: 5000,
-        transition: Bounce,
-        closeOnClick: true,
-        hideProgressBar: false,
-        pauseOnHover: false,
-      });
-    }
-
     if (!error) {
       setLoading(true);
       const formData = new FormData();
@@ -479,6 +472,7 @@ export default function AddProduct() {
       formData.append("price", productData.price);
       formData.append("discount_price", productData.discount_price ?? "0");
       formData.append("brand", brandValue);
+      formData.append("stock", isStock.toString());
 
       const userJson = localStorage.getItem("user");
       if (!userJson) {
@@ -553,6 +547,8 @@ export default function AddProduct() {
         setMainImage(null);
         setBrandValue("");
 
+        setIsStock(false);
+
         return;
       }
 
@@ -595,7 +591,7 @@ export default function AddProduct() {
           {/* ---------------------------- Content ----------------------------------- */}
           <div className='w-full flex justify-between gap-[10px]'>
             {/* ---------------------------- Right Side ----------------------------------- */}
-            <div className='w-[529px] h-[690px] flex flex-col py-[14px] px-[17px] bg-white rounded-[10px]'>
+            <div className='w-[529px] h-[710px] flex flex-col py-[14px] px-[17px] bg-white rounded-[10px]'>
               {/* ---------------------------- Add Image ----------------------------------- */}
               {/* title */}
               <div className='flex items-center gap-[10px] mb-[5px]'>
@@ -983,10 +979,25 @@ export default function AddProduct() {
                   %
                 </span>
               </div>
+
+              {/* ---------------------------- Stock ----------------------------------- */}
+              <div className='h-[20px]'></div>
+              <div className='flex gap-[10px]'>
+                <span className='text-[17px] text-[#65716F] font-YekanBakhMedium'>
+                  استوک
+                </span>
+                <input
+                  type='checkbox'
+                  name=''
+                  id=''
+                  onChange={() => setIsStock((prev) => !prev)}
+                  checked={isStock}
+                />
+              </div>
             </div>
 
             {/* ---------------------------- Left Side ----------------------------------- */}
-            <div className='w-[529px] h-[690px] flex flex-col py-[14px] px-[28px] bg-white rounded-[10px]'>
+            <div className='w-[529px] h-[710px] flex flex-col py-[14px] px-[28px] bg-white rounded-[10px]'>
               {/* ---------------------------- Product Description ----------------------------------- */}
               {/* title */}
               <span className='text-[16px] text-[#4E5A60] font-YekanBakhMedium mb-[5px]'>
@@ -1054,7 +1065,8 @@ export default function AddProduct() {
                       </div>
                       <div className='flex-grow h-[48.5px] flex justify-center items-center border-b-2 border-[#E0E0E0]'>
                         <span className='text-[16px] text-black font-YekanBakhMedium'>
-                          {item.value}
+                          {item.value.slice(0, 35)}
+                          {item.value.length > 30 ? "..." : ""}
                         </span>
                       </div>
 

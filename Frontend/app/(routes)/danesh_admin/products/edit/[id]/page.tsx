@@ -541,18 +541,6 @@ export default function EditProduct({ params }: { params: { id: string } }) {
       });
     }
 
-    if (Number(productData.price) == 0) {
-      error = true;
-      toast.error("قیمت محصول نمیتواند صفر باشد!", {
-        position: "top-right",
-        autoClose: 5000,
-        transition: Bounce,
-        closeOnClick: true,
-        hideProgressBar: false,
-        pauseOnHover: false,
-      });
-    }
-
     if (!error) {
       setLoading(true);
       const formData = new FormData();
@@ -635,11 +623,11 @@ export default function EditProduct({ params }: { params: { id: string } }) {
     );
   }
 
-  const handleDeleteProduct = async() => {
-    const res = await deleteProduct({id: params.id})
+  const handleDeleteProduct = async () => {
+    const res = await deleteProduct({ id: params.id });
 
-    if(res.success) {
-      router.push("/danesh_admin/products/all")
+    if (res.success) {
+      router.push("/danesh_admin/products/all");
     } else {
       toast.error("خطایی رخ داده است. لطفا دوباره تلاش کنید.!", {
         position: "top-right",
@@ -650,7 +638,7 @@ export default function EditProduct({ params }: { params: { id: string } }) {
         pauseOnHover: false,
       });
     }
-  }
+  };
 
   return (
     <>
@@ -1149,7 +1137,8 @@ export default function EditProduct({ params }: { params: { id: string } }) {
                       </div>
                       <div className='flex-grow h-[48.5px] flex justify-center items-center border-b-2 border-[#E0E0E0]'>
                         <span className='text-[16px] text-black font-YekanBakhMedium'>
-                          {item.value}
+                          {item.value.slice(0, 35)}
+                          {item.value.length > 30 ? "..." : ""}
                         </span>
                       </div>
 
