@@ -1,11 +1,11 @@
 import json
 from rest_framework import serializers
-from .models import Category, Product, Image, Attribute, Info, Note
+from .models import Category, Product, Image, Attribute, Info, Note, Color
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ["id", "name", "color"]
+        fields = ["id", "name", "icon"]
 
 class InfoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -27,17 +27,26 @@ class AttributeSerializer(serializers.ModelSerializer):
         model = Attribute
         fields = ['id', 'key', 'value']
 
+class ColorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Color
+        fields = ['id', 'hex']
+
 class ProductSerializer(serializers.ModelSerializer):
     images = ImageSerializer(many=True, required=False)
     attributes = AttributeSerializer(many=True, required=False)
+    categories = CategorySerializer(many=True, required=False)
+    colors = ColorSerializer(many=True, required=False)
 
     class Meta:
         model = Product
-        fields = ["id", "category_id", "name", "description", "discount", "price", "discount_price", "main_image", "images", "attributes", "brand", "stock", "published_date", "admin_username", "last_update_date", "lats_update_admin_username"]
+        fields = ["id", "categories", "name", "description", "discount", "price", "discount_price", "main_image", "images", "attributes", "brand", "stock","colors", "published_date", "admin_username", "last_update_date", "lats_update_admin_username"]
 
     def create(self, validated_data):
         images_data = self.context['request'].FILES.getlist('images')
         attributes_json_data = self.context['request'].data.get('attributes')
+        categories_json_data = self.context['request'].data.get('categories')
+        colors_json_data = self.context['request'].data.get('colors')
 
         product = Product.objects.create(**validated_data)
 
@@ -53,6 +62,24 @@ class ProductSerializer(serializers.ModelSerializer):
                 product.attributes.add(attribute)
         except:
             product.attributes.clear()
+
+        try:
+            categories_data = json.loads(categories_json_data)
+        
+            for category_data in categories_data:
+                category = Category.objects.create(product=product, name=category_data['name'], icon=category_data['icon'])
+                product.categories.add(category)
+        except:
+            product.categories.clear()
+
+        try:
+            colors_data = json.loads(colors_json_data)
+        
+            for color_data in colors_data:
+                color = Color.objects.create(product=product, hex=color_data['hex'], name=color_data['name'])
+                product.colors.add(color)
+        except:
+            product.colors.clear()
             
         return product
     
@@ -76,6 +103,8 @@ class ProductSerializer(serializers.ModelSerializer):
             instance.images.add(image)
 
         attributes_json_data = self.context['request'].data.get('attributes')
+        categories_json_data = self.context['request'].data.get('categories')
+        colors_json_data = self.context['request'].data.get('colors')
 
         try:
             attributes_data = json.loads(attributes_json_data)
@@ -85,11 +114,24 @@ class ProductSerializer(serializers.ModelSerializer):
         except:
             instance.attributes.clear()
 
+        try:
+            categories_data = json.loads(categories_json_data)
+            for category_data in categories_data:
+                category = Category.objects.create(product=instance, name=category_data['name'], icon=category_data['icon'])
+                instance.categories.add(category)
+        except:
+            instance.categories.clear()
+
+        try:
+            colors_data = json.loads(colors_json_data)
+            for color_data in colors_data:
+                color = Color.objects.create(product=instance, hex=color_data['hex'], name=color_data['name'])
+                instance.colors.add(color)
+        except:
+            instance.colors.clear()
+
         instance.save()
 
         return instance
-        # main_image = models.ImageField(null=True)
-        # images = models.ManyToManyField(Image, null=True)
-        # attributes = models.ManyToManyField(Attribute, null=True)
 
 

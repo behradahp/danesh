@@ -13,7 +13,7 @@ import PhoneIcon from "@/app/_components/icons/phone_icon";
 
 export default function Header() {
   return (
-    <header className='w-full pt-[40px] pl-[44px] pr-[63.4px]'>
+    <header className='w-full pt-[20px] pl-[44px] pr-[63.4px]'>
       <div className='w-full flex flex-col gap-[31px] border-b border-b-[#707070] pb-[12.5px]'>
         {/* ------------------------------------------ First Row -------------------------------------------- */}
         <section className='flex justify-between items-center'>
@@ -33,8 +33,8 @@ export default function Header() {
           <HeaderSearchBox />
 
           {/* Account Info */}
-          <div className='w-[251px] h-[56px] flex justify-between items-center border border-[#707070] rounded-[5px] px-[20px] hover:bg-[#8e64dc46] cursor-pointer'>
-            <span className='text-[20px] text-[#707070] font-YekanBakhMedium'>
+          <div className='w-[209px] h-[40px] flex justify-between items-center border border-[#707070] rounded-[5px] px-[10px] hover:bg-[#8e64dc46] cursor-pointer'>
+            <span className='text-[16px] text-[#707070] font-YekanBakhMedium'>
               حساب کاربری
             </span>
 
@@ -49,7 +49,7 @@ export default function Header() {
 
           {/* Phone Info */}
           <div className='flex items-center gap-[15px]'>
-            <span className='text-[24px] text-[#666666] font-YekanBakhMedium'>
+            <span className='text-[18px] text-[#666666] font-YekanBakhMedium'>
               ۰۲۱۸۸۳۰۹۵۹۲
             </span>
 

@@ -4,43 +4,40 @@
 import CategoryCard from "./category_card";
 
 // Icons
-import AllInOneIcon from "@/app/_components/icons/home_categories_icons/all_in_one_icon";
-import LaptopIcon from "@/app/_components/icons/home_categories_icons/laptop_icon";
-import GamingIcon from "@/app/_components/icons/home_categories_icons/gaming_icon";
-import NetworkSwitchIcon from "@/app/_components/icons/home_categories_icons/network_switch_icon";
-import DigitalAccessoriesIcon from "@/app/_components/icons/home_categories_icons/digital_accessories_icon";
-import NonDigitalAccessoriesIcon from "../icons/home_categories_icons/non_digital_accessories_icon";
+import AllInOneIcon from "@/public/images/home_categories/all-in-one.png";
+import laptop from "@/public/images/home_categories/laptop.png";
+import networkSwitch from "@/public/images/home_categories/netwok-switch.png";
 
 const CATEGORIES = [
   {
     id: 1,
     name: "آل این وان",
-    icon: AllInOneIcon,
+    image: AllInOneIcon,
   },
   {
     id: 2,
     name: "لپ تاپ",
-    icon: LaptopIcon,
+    image: laptop,
   },
   {
     id: 3,
     name: "گیمینگ",
-    icon: GamingIcon,
+    image: AllInOneIcon,
   },
   {
     id: 4,
     name: "سوییچ شبکه",
-    icon: NetworkSwitchIcon,
+    image: networkSwitch,
   },
   {
     id: 5,
     name: "لوازم جانبی الکترونیکی",
-    icon: DigitalAccessoriesIcon,
+    image: AllInOneIcon,
   },
   {
     id: 6,
     name: "لوازم جانبی غیر الکترونیکی",
-    icon: NonDigitalAccessoriesIcon,
+    image: AllInOneIcon,
   },
 ];
 
@@ -50,7 +47,7 @@ export default function Categories() {
       {CATEGORIES.map((item) => {
         return (
           <div key={item.id}>
-            <CategoryCard name={item.name} Icon={item.icon} id={item.id} />
+            <CategoryCard name={item.name} image={item.image} id={item.id} />
           </div>
         );
       })}

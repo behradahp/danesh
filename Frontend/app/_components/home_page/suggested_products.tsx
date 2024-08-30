@@ -31,10 +31,10 @@ export default function SuggestedProducts() {
   const [isShowAllHovered, setIsShowAllHovered] = useState<boolean>(false);
 
   return (
-    <section className='flex flex-col gap-[45px] px-[45px]'>
+    <section className='flex flex-col gap-[31px] px-[45px]'>
       {/* Title */}
       <div className='w-full flex justify-between'>
-        <span className='text-[30px] text-[#707070] font-YekanBakhMedium'>
+        <span className='text-[24px] text-[#707070] font-YekanBakhMedium'>
           محصولات پیشنهادی
         </span>
 
@@ -45,7 +45,7 @@ export default function SuggestedProducts() {
           onMouseLeave={() => setIsShowAllHovered(false)}
         >
           <span
-            className={`text-[20px] ${
+            className={`text-[24px] ${
               isShowAllHovered ? "text-[#8D64DC]" : "text-[#707070]"
             } font-YekanBakhMedium mt-[4px]`}
           >

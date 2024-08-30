@@ -2,14 +2,15 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image, { StaticImageData } from "next/image";
 
 export default function CategoryCard({
   name,
-  Icon,
+  image,
   id,
 }: {
   name: string;
-  Icon: ({ color }: { color?: string }) => JSX.Element;
+  image: StaticImageData;
   id: number;
 }) {
   const [iconColor, setIconColor] = useState<string | undefined>(undefined);
@@ -25,7 +26,16 @@ export default function CategoryCard({
           {name}
         </span>
 
-        <Icon color={iconColor} />
+        <div className='w-[150px] h-[100px]'>
+          <Image
+            src={image}
+            alt='right_banner_image'
+            width={0}
+            height={0}
+            sizes='100vw'
+            style={{ width: "100%", height: "100%" }}
+          />
+        </div>
       </div>
     </Link>
   );

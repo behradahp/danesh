@@ -59,12 +59,21 @@ class CategotyProductsCount(APIView):
             "categories": []
         }
 
+        products = Product.objects.all()
+
         for category in categories:
+            count = 0
+            for product in products:
+                for productCategory in product.categories:
+                    if(productCategory.id == category.id): 
+                        count += 1
+                        break
+
             category_info = {
                 "id": category.id,
                 "name": category.name,
-                "color": category.color,
-                "count": Product.objects.filter(category_id=category.id).count()
+                "icon": category.icon,
+                "count": count,
             }
             data["categories"].append(category_info)
 

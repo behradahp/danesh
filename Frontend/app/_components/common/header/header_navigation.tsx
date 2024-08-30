@@ -17,14 +17,14 @@ export default function HeaderNavigations() {
     <nav className='flex items-center'>
       {/* Categories */}
       <div
-        className='w-[174px] flex justify-between items-center ml-[16px] cursor-pointer'
+        className='w-[128px] flex justify-between items-center ml-[16px] cursor-pointer'
         onMouseEnter={() => setIsCategoryMenuHoverd(true)}
         onMouseLeave={() => setIsCategoryMenuHoverd(false)}
       >
         <MenuIcon color={isCategoryMenuHoverd ? "#8D64DC" : undefined} />
 
         <span
-          className={`text-[24px] ${
+          className={`text-[18px] ${
             isCategoryMenuHoverd ? "text-[#8D64DC]" : "text-[#707070]"
           } font-YekanBakhMedium`}
         >
@@ -33,11 +33,11 @@ export default function HeaderNavigations() {
       </div>
 
       {/* Common Links */}
-      <div className='flex gap-[44px] pr-[44px] border-r border-r-[#707070]'>
+      <div className='flex gap-[25px] pr-[16px] border-r border-r-[#707070]'>
         {COMMONLINKS.map((item, index) => {
           return (
             <Link key={index} href={"#"}>
-              <span className='text-[24px] text-[#707070] font-YekanBakhMedium hover:text-[#8D64DC]'>
+              <span className='text-[18px] text-[#707070] font-YekanBakhMedium hover:text-[#8D64DC]'>
                 {item}
               </span>
             </Link>

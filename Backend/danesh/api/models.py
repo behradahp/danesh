@@ -2,7 +2,8 @@ from django.db import models
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
-    color = models.CharField(max_length=100, null=True)
+    icon = models.TextField()
+
 
 class Image(models.Model):
     image = models.ImageField(null=True)
@@ -11,8 +12,12 @@ class Attribute(models.Model):
     key = models.CharField(max_length=100)
     value = models.CharField(max_length=100)
 
+class Color(models.Model):
+    hex = models.CharField(max_length=10)
+    name = models.CharField(max_length=20)
+
 class Product(models.Model):
-    category_id = models.IntegerField()
+    categories = models.ManyToManyField(Category)
     name = models.CharField(max_length=100)
     description = models.TextField()
     discount_price = models.IntegerField(default=0)
@@ -22,6 +27,7 @@ class Product(models.Model):
     attributes = models.ManyToManyField(Attribute)
     brand = models.CharField(max_length=100, blank=True)
     stock = models.BooleanField()
+    colors = models.ManyToManyField(Color)
     published_date = models.DateTimeField(auto_now_add=True)
     admin_username = models.CharField(max_length=100)
     last_update_date = models.DateTimeField(auto_now=True)

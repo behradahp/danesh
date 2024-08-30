@@ -3,17 +3,25 @@ type Attribute = {
     value: string;
 }
 
+type Image = {
+    id: string;
+    image: string;
+}
+
 type Product = {
     id: Number;
-    category_id: Number;
+    categories: Category[];
     name: string;
     description: string;
     discount: number;
     price: Number;
-    main_image: string;
     discount_price: string;
-    images: string[];
+    main_image: string;
+    images: Image[];
     attributes: Attribute[];
+    brand: string;
+    stock: boolean;
+    colors: Color[];
     published_date: string;
     admin_username: string;
     last_update_date: string;

@@ -86,10 +86,9 @@ export default function AdminDashboard() {
                 <div className='flex-shrink-0 w-[200px] h-[60px] flex justify-between items-center bg-white rounded-[8px] px-[10px] shadow-default'>
                   {/* ---------------------------- Icon ----------------------------------- */}
                   <div
-                    className={`w-[30px] h-[30px] flex justify-center rounded-[100px]`}
-                    style={{ backgroundColor: "#606036" }}
+                    className={`w-[30px] h-[30px] flex justify-center bg-[#c7c7c7] rounded-[100px]`}
                   >
-                    <CategoryIcon color='white' />
+                    <CategoryIcon color='#811b98' />
                   </div>
 
                   {/* ---------------------------- Category Info ----------------------------------- */}
@@ -113,12 +112,10 @@ export default function AdminDashboard() {
                   >
                     {/* ---------------------------- Icon ----------------------------------- */}
                     <div
-                      className={`w-[30px] h-[30px] flex justify-center rounded-[100px]`}
-                      style={{
-                        backgroundColor: categoryColors[index],
-                      }}
+                      className={`w-[30px] h-[30px] flex justify-center bg-[#c7c7c7] rounded-[100px]`}
                     >
-                      <CategoryIcon color='white' />
+                      {/* <CategoryIcon color='white' /> */}
+                      <div className="Container mt-[5px]" dangerouslySetInnerHTML={{__html: item.icon}}></div>
                     </div>
 
                     {/* ---------------------------- Category Info ----------------------------------- */}

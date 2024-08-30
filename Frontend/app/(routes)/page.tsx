@@ -14,11 +14,11 @@ export default function HomePage() {
   return (
     <main className="bg-[#FDFCFF]">
       <Header />
-      <div className="h-[36.5px]"></div>
+      <div className="h-[28.5px]"></div>
       <HomeBanners />
-      <div className="h-[52px]"></div>
+      <div className="h-[40px]"></div>
       <Categories />
-      <div className="h-[52px]"></div>
+      <div className="h-[40px]"></div>
       <SuggestedProducts />
       <div className="h-[78px]"></div>
       <DaneshServices />

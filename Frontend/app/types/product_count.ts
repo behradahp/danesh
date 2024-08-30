@@ -1,7 +1,7 @@
 type ProductCategoryCount = {
     id: Number;
     name: string;
-    color: string;
+    icon: string;
     count: Number;
 }
 
