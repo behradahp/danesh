@@ -64,7 +64,8 @@ class CategotyProductsCount(APIView):
         for category in categories:
             count = 0
             for product in products:
-                for productCategory in product.categories:
+                productCategories = product.categories.all()
+                for productCategory in productCategories:
                     if(productCategory.id == category.id): 
                         count += 1
                         break

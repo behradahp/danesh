@@ -1,4 +1,10 @@
-import { ChangeEvent, Dispatch, SetStateAction, useEffect, useState } from "react";
+import {
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import Image from "next/image";
 import { FileUploader } from "react-drag-drop-files";
 
@@ -23,8 +29,8 @@ const ProductImages = ({
   setProductData,
   reset,
 }: {
-  productMainImage?: string,
-  productImages?: string[],
+  productMainImage?: string;
+  productImages?: string[];
   productData: ProductData;
   setProductData: Dispatch<SetStateAction<ProductData>>;
   reset: boolean;
@@ -36,7 +42,7 @@ const ProductImages = ({
   const [isImagesModalOpen, setIsImagesModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    if(productMainImage) {
+    if (productMainImage) {
       setMainImage({
         file: productData.main_image!,
         url: productMainImage,
@@ -45,10 +51,10 @@ const ProductImages = ({
       setModalMainImage(productMainImage);
     }
 
-    if(productImages) {
+    if (productImages) {
       setShowableImages(productImages);
     }
-  }, [productMainImage, productImages, productData.main_image])
+  }, [productMainImage, productImages, productData.main_image]);
 
   const handleAddImages = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -66,8 +72,12 @@ const ProductImages = ({
           file: files[0],
           url: showableImagesList[0],
         });
-        
-        setProductData({...productData, main_image: files[0], images: [...files.splice(1)]});
+
+        setProductData({
+          ...productData,
+          main_image: files[0],
+          images: [...files.splice(1)],
+        });
         setShowableImages([...showableImages, ...showableImagesList.splice(1)]);
 
         setModalMainImage(showableImagesList[0]);
@@ -75,13 +85,16 @@ const ProductImages = ({
         return;
       }
 
-      setProductData({...productData, images: [...productData.images, ...files]});
+      setProductData({
+        ...productData,
+        images: [...productData.images, ...files],
+      });
       setShowableImages([...showableImages, ...showableImagesList]);
     }
   };
 
   const handleAddDropedImages = (imageFiles: File[]) => {
-    console.log(imageFiles)
+    console.log(imageFiles);
 
     if (imageFiles && imageFiles.length) {
       const files: File[] = [];
@@ -96,8 +109,12 @@ const ProductImages = ({
           file: files[0],
           url: showableImagesList[0],
         });
-        
-        setProductData({...productData, main_image: files[0], images: [...files.splice(1)]});
+
+        setProductData({
+          ...productData,
+          main_image: files[0],
+          images: [...files.splice(1)],
+        });
         setShowableImages([...showableImages, ...showableImagesList.splice(1)]);
 
         setModalMainImage(showableImagesList[0]);
@@ -105,7 +122,10 @@ const ProductImages = ({
         return;
       }
 
-      setProductData({...productData, images: [...productData.images, ...files]});
+      setProductData({
+        ...productData,
+        images: [...productData.images, ...files],
+      });
       setShowableImages([...showableImages, ...showableImagesList]);
     }
   };
@@ -132,7 +152,11 @@ const ProductImages = ({
       url: showableImages[index],
     });
 
-    setProductData({...productData, main_image: productData.images[index], images: newProductImages});
+    setProductData({
+      ...productData,
+      main_image: productData.images[index],
+      images: newProductImages,
+    });
     setShowableImages(newShowableImages);
   };
 
@@ -144,17 +168,17 @@ const ProductImages = ({
       (image) => image != productData.images[index]
     );
 
-    setProductData({...productData, images: newProductImages});
+    setProductData({ ...productData, images: newProductImages });
     setShowableImages(newShowableImages);
   };
 
   useEffect(() => {
-    if(reset) {
+    if (reset) {
       setShowableImages([]);
       setMainImage(null);
       setModalMainImage("");
     }
-  }, [reset])
+  }, [reset]);
 
   return (
     <>
@@ -169,7 +193,7 @@ const ProductImages = ({
             mainImage != null ? "" : "hidden"
           } text-[13px] text-[#633333] font-YekanBakhMedium cursor-pointer`}
           onClick={() => {
-            setProductData({...productData, main_image: null, images: []});
+            setProductData({ ...productData, main_image: null, images: [] });
             setShowableImages([]);
             setMainImage(null);
           }}
@@ -179,85 +203,96 @@ const ProductImages = ({
       </div>
 
       {/* images */}
-      <FileUploader handleChange={handleAddDropedImages} name='file' types={fileTypes} multiple={true}>
-      <div className='w-full flex gap-[7px] p-[8px] border-2 border-[#EBEBEB] rounded-[10px]'>
-        {/* Add */}
-        <label htmlFor='product_images'>
-          <input
-            type='file'
-            id='product_images'
-            accept='image/*'
-            className='hidden'
-            multiple
-            onChange={(e) => handleAddImages(e)}
-          />
-          <div
-            className='w-[150px] h-[160px] flex justify-center items-center border border-dashed border-[#707070] rounded-[10px] cursor-pointer hover:border-solid hover:border-[#C6D7FF]'
-            onMouseEnter={() => setAddImageHover(true)}
-            onMouseLeave={() => setAddImageHover(false)}
-          >
-            <AddImageIcon color={addImageHover ? "#6695FF" : undefined} />
-          </div>
-        </label>
-
-        {/* Other Images */}
-        <div className='flex-shrink-0 w-[160px] flex flex-row-reverse flex-wrap gap-[8px]'>
-          {[0, 0, 0, 0].map((item, index) => {
-            return (
-              <div
-                key={index}
-                className='relative w-[75px] h-[75px] border border-[#EBEBEB] rounded-[10px] p-[3px]'
-                onClick={() => setIsImagesModalOpen(true)}
-              >
-                {showableImages[index] != undefined ? (
-                  <Image
-                    loader={() => showableImages[index]}
-                    src={showableImages[index]}
-                    alt='product-images'
-                    width={0}
-                    height={0}
-                    sizes='100vw'
-                    style={{ width: "100%", height: "100%" }}
-                  />
-                ) : (
-                  <></>
-                )}
-
-                <div
-                  className={`${
-                    index == 3 && showableImages.length > 4 ? "" : "hidden"
-                  } absolute inset-0 w-full h-full flex justify-center items-center rounded-[10px] bg-black/30 cursor-pointer`}
-                  onClick={() => setIsImagesModalOpen(true)}
-                >
-                  <span className='text-16px] text-white font-YekanBakhMedium'>
-                    +{(showableImages.length - 4).toLocaleString("fa")}
-                  </span>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Main Image */}
+      <FileUploader
+        handleChange={handleAddDropedImages}
+        name='file'
+        types={fileTypes}
+        multiple={true}
+        disabled
+      >
         <div
-          className='w-[150px] h-[160px] border border-[#EBEBEB] rounded-[10px] p-[3px]'
-          onClick={() => setIsImagesModalOpen(true)}
+          className='w-full flex gap-[7px] p-[8px] border-2 border-[#EBEBEB] rounded-[10px]'
+          onClick={(e) => {
+            console.log(1);
+          }}
         >
-          {mainImage != null ? (
-            <Image
-              loader={() => mainImage.url}
-              src={mainImage.url}
-              alt='product-images'
-              width={0}
-              height={0}
-              sizes='100vw'
-              style={{ width: "100%", height: "100%" }}
+          {/* Add */}
+          <label htmlFor='product_images'>
+            <input
+              type='file'
+              id='product_images'
+              accept='image/*'
+              className='hidden'
+              multiple
+              onChange={(e) => handleAddImages(e)}
             />
-          ) : (
-            <></>
-          )}
+            <div
+              className='w-[150px] h-[160px] flex justify-center items-center border border-dashed border-[#707070] rounded-[10px] cursor-pointer hover:border-solid hover:border-[#C6D7FF]'
+              onMouseEnter={() => setAddImageHover(true)}
+              onMouseLeave={() => setAddImageHover(false)}
+            >
+              <AddImageIcon color={addImageHover ? "#6695FF" : undefined} />
+            </div>
+          </label>
+
+          {/* Other Images */}
+          <div className='flex-shrink-0 w-[160px] flex flex-row-reverse flex-wrap gap-[8px]'>
+            {[0, 0, 0, 0].map((item, index) => {
+              return (
+                <div
+                  key={index}
+                  className='relative w-[75px] h-[75px] border border-[#EBEBEB] rounded-[10px] p-[3px]'
+                  onClick={(e) => setIsImagesModalOpen(true)}
+                >
+                  {showableImages[index] != undefined ? (
+                    <Image
+                      loader={() => showableImages[index]}
+                      src={showableImages[index]}
+                      alt='product-images'
+                      width={0}
+                      height={0}
+                      sizes='100vw'
+                      style={{ width: "100%", height: "100%" }}
+                    />
+                  ) : (
+                    <></>
+                  )}
+
+                  <div
+                    className={`${
+                      index == 3 && showableImages.length > 4 ? "" : "hidden"
+                    } absolute inset-0 w-full h-full flex justify-center items-center rounded-[10px] bg-black/30 cursor-pointer`}
+                    onClick={() => setIsImagesModalOpen(true)}
+                  >
+                    <span className='text-16px] text-white font-YekanBakhMedium'>
+                      +{(showableImages.length - 4).toLocaleString("fa")}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Main Image */}
+          <div
+            className='w-[150px] h-[160px] border border-[#EBEBEB] rounded-[10px] p-[3px]'
+            onClick={() => setIsImagesModalOpen(true)}
+          >
+            {mainImage != null ? (
+              <Image
+                loader={() => mainImage.url}
+                src={mainImage.url}
+                alt='product-images'
+                width={0}
+                height={0}
+                sizes='100vw'
+                style={{ width: "100%", height: "100%" }}
+              />
+            ) : (
+              <></>
+            )}
+          </div>
         </div>
-      </div>
       </FileUploader>
 
       {/* Images Modal */}

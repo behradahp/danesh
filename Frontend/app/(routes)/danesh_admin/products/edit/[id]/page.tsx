@@ -54,19 +54,11 @@ export default function EditProduct({ params }: { params: { id: string } }) {
       const data: Product = res.data;
       setResData(data);
 
+      setTimeout(() => {
+        setResData(null);
+      }, 500)
+
       if (res.success) {
-        // setPriceValue(res.data.price);
-        // setPriceQuery(Number(res.data.price).toLocaleString("fa"));
-        // setWordifyPrice(wordifyRialsInTomans(res.data.price + "0"));
-
-        // setDiscountPriceValue(res.data.discount_price.toString());
-        // setDiscountPriceQuery(
-        //   Number(res.data.discount_price).toLocaleString("fa")
-        // );
-        // setWordifyDiscountPrice(
-        //   wordifyRialsInTomans(res.data.discount_price + "0")
-        // );
-
         const imageFiles: File[] = [];
         for (let image of data.images) {
           const imageFile = await urlToFile(image.image);

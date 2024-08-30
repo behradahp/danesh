@@ -21,34 +21,36 @@ const ColorAttribute = ({
   const [selectedColors, setSelectedColors] = useState<Color[]>([]);
 
   const handleSelectColor = (selectedColor: Color) => {
-    for(let color of selectedColors) {
-      if(color.hex === selectedColor.hex) {
-        const newColorList = selectedColors.filter((color) => color.hex != selectedColor.hex);
+    for (let color of selectedColors) {
+      if (color.hex === selectedColor.hex) {
+        const newColorList = selectedColors.filter(
+          (color) => color.hex != selectedColor.hex
+        );
         setSelectedColors(newColorList);
         return;
       }
     }
 
     setSelectedColors([...selectedColors, selectedColor]);
-  }
+  };
 
   const isSelectedColor = (selectedColor: Color) => {
-    for(let color of selectedColors) {
-      if(color.hex === selectedColor.hex) {
+    for (let color of selectedColors) {
+      if (color.hex === selectedColor.hex) {
         return true;
       }
     }
 
     return false;
-  }
+  };
 
   useEffect(() => {
-    if(reset) {
+    if (reset) {
       setSelectedColors([]);
     }
 
     setSelectedColors(productData.colors);
-  }, [reset, productData])
+  }, [reset, productData]);
 
   return (
     <>
@@ -59,7 +61,7 @@ const ColorAttribute = ({
           </span>
         </div>
         <div className='flex-grow h-[48.5px] flex justify-center items-center border-b-2 border-[#E0E0E0]'>
-        <div className='w-full flex flex-wrap gap-[10px] p-[10px] rounded'>
+          <div className='w-max flex flex-wrap gap-[10px] p-[10px] rounded'>
             {productData.colors.map((item, index) => {
               return (
                 <div
@@ -109,12 +111,16 @@ const ColorAttribute = ({
             رنگ‌ها
           </span>
 
-          <div className='w-[426px] flex flex-wrap gap-[10px] p-[10px] rounded'>
+          <div className='w-[426px] flex flex-wrap items-center gap-[10px] p-[10px] rounded'>
             {productColors.map((item, index) => {
               return (
                 <div
                   key={index}
-                  className={`${isSelectedColor(item) ? 'border-[4px] border-green-700' : 'border-[1px] border-black'} w-[30px] h-[30px] rounded-[100px] cursor-pointer`}
+                  className={`${
+                    isSelectedColor(item)
+                      ? "border-[4px] border-[#6695FF] w-[35px] h-[35px]"
+                      : "border-[1px] border-black w-[30px] h-[30px]"
+                  }  rounded-[100px] cursor-pointer`}
                   style={{ backgroundColor: item.hex }}
                   onClick={() => handleSelectColor(item)}
                 ></div>

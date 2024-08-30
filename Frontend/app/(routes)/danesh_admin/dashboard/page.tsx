@@ -37,6 +37,7 @@ export default function AdminDashboard() {
     const fetchCategories = async () => {
       setLoading(true);
       const res = await productsCategoryCount();
+      console.log(res);
       setLoading(false);
 
       setCategories(res.data);
