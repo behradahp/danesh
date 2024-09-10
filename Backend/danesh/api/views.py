@@ -47,8 +47,15 @@ class CategotyProducts(APIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     def get(request, *args, **kwargs):
-        products = Product.objects.filter(category_id=kwargs['pk'])
-        serializer = ProductSerializer(products, many=True)
+        products = Product.objects.all()
+        category_products = []
+        for product in products:
+            categories = product.categories.all()
+            for category in categories:
+                if(category.id == kwargs['pk']):
+                    category_products.append(product)
+
+        serializer = ProductSerializer(category_products, many=True)
         return Response(serializer.data)
 
 class CategotyProductsCount(APIView):
@@ -97,6 +104,68 @@ class ProductsSearch(APIView):
 
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
+
+class NewestProducts(APIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+    def get(request, *args, **kwargs):
+        products = Product.objects.all().order_by('-published_date')
+        newest_products = []
+        for i in range(5):
+            newest_products.append(products[i])
+
+        serializer = ProductSerializer(newest_products, many=True)
+        return Response(serializer.data)
+    
+class DiscountProducts(APIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+    def get(self, request, format=None):
+        products = Product.objects.all()
+        newest_products = []
+
+        limit = request.query_params.get("limit", "")
+        count = 0
+
+        for product in products:
+            if(limit and count == int(limit)): 
+                break
+
+            if(product.discount != 0):
+                newest_products.append(product)
+                count += 1
+
+        serializer = ProductSerializer(newest_products, many=True)
+        return Response(serializer.data)
+    
+class SuggestedProducts(APIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+    def get(self, request, format=None):
+        suggested_products = []
+
+        product_ids = []
+        count = 0
+
+        while(True):
+            random_product = Product.objects.order_by('?')[0]
+
+            if(random_product.id in product_ids):
+                continue
+
+            product_ids.append(random_product.id)
+            suggested_products.append(random_product)
+            count += 1
+            
+            if(count == 5):
+                break
+
+        serializer = ProductSerializer(suggested_products, many=True)
+        return Response(serializer.data)
+    
 
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt

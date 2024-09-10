@@ -15,7 +15,6 @@ const weekDays = [
   "جمعه",
 ];
 
-const DaysInMonth = 31;
 export default function Calendar() {
   const [info, setInfo] = useState({
     startDayIndex: 0,

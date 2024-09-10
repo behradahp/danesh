@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import { colorPalette } from "@/app/constants/color_palette";
 import axios from "axios";
@@ -20,7 +21,6 @@ export default function AdminDashboard() {
   const [categories, setCategories] = useState<ProductCount | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [note, setNote] = useState<string>("");
-  const [categoryColors, setCategoryColors] = useState<string[]>([])
 
   const handleRandomColor = () => {
     if (selectedColors.length == colorPalette.length) selectedColors.length = 0;
@@ -47,7 +47,6 @@ export default function AdminDashboard() {
         list.push(colorPalette[handleRandomColor()]);
       }
       console.log(list);
-      setCategoryColors(list);
     };
 
     fetchCategories();

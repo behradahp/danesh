@@ -30,8 +30,6 @@ export default function PanelLayout({
         error: string;
       } = await adminCheck();
 
-      console.log({ response: response });
-
       if (response && !response.success) {
         router.push("/auth/admin_login");
       } else {

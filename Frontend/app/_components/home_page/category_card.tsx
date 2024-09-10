@@ -10,7 +10,7 @@ export default function CategoryCard({
   id,
 }: {
   name: string;
-  image: StaticImageData;
+  image: string;
   id: number;
 }) {
   const [iconColor, setIconColor] = useState<string | undefined>(undefined);
@@ -18,7 +18,7 @@ export default function CategoryCard({
   return (
     <Link href={""}>
       <div
-        className='w-[190px] h-[222px] flex flex-col items-center justify-between pt-[28px] pb-[18px] bg-[#F8F8F8] rounded hover:bg-[#8e64dc46]'
+        className='w-[200px] h-[222px] flex flex-col items-center pt-[28px] pb-[18px] bg-[#F8F8F8] rounded hover:bg-[#8e64dc46]'
         onMouseEnter={() => setIconColor("#8D64DC")}
         onMouseLeave={() => setIconColor(undefined)}
       >
@@ -26,14 +26,15 @@ export default function CategoryCard({
           {name}
         </span>
 
-        <div className='w-[150px] h-[100px]'>
+        <div className='flex-grow w-full flex justify-center items-center'>
           <Image
+            loader={() => image}
             src={image}
-            alt='right_banner_image'
+            alt='category image'
             width={0}
             height={0}
             sizes='100vw'
-            style={{ width: "100%", height: "100%" }}
+            style={{ width: "auto", height: "auto", maxHeight: "150px" }}
           />
         </div>
       </div>

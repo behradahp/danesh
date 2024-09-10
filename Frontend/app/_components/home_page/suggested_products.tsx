@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
 // Components
@@ -9,26 +9,25 @@ import ProductCard from "../common/cards/product_card";
 // Icons
 import LeftChevron from "../icons/left_chevron";
 
-// Sample Products
-const product: Product = {
-  id: 1,
-  category_id: 1,
-  name: "لپ تاپ لنوو مدل legion Y530",
-  description: "string",
-  discount: 0,
-  price: 50000000,
-  main_image: "https://daneshapi.liara.run/media/1_QshXgGu.webp",
-  discount_price: "50000000",
-  images: [],
-  attributes: [],
-  published_date: "",
-  admin_username: "",
-  last_update_date: "",
-  lats_update_admin_username: "",
-};
+// Api
+import { getSuggestedProducts } from "@/app/actions/actions";
+
+// Consts
+import { url } from "@/app/constants/url";
 
 export default function SuggestedProducts() {
   const [isShowAllHovered, setIsShowAllHovered] = useState<boolean>(false);
+  const [products, setProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    const fetchSuggestedProducts = async () => {
+      const res = await getSuggestedProducts();
+      const data = res.data;
+      setProducts(data);
+    };
+
+    fetchSuggestedProducts();
+  }, []);
 
   return (
     <section className='flex flex-col gap-[31px] px-[45px]'>
@@ -58,11 +57,13 @@ export default function SuggestedProducts() {
 
       {/* Products */}
       <div className='w-full flex gap-[24px]'>
-        <ProductCard data={product} />
-        <ProductCard data={product} />
-        <ProductCard data={product} />
-        <ProductCard data={product} />
-        <ProductCard data={product} />
+        {products.map((item) => {
+          return (
+            <div key={item.id}>
+              <ProductCard data={item} url={url}/>
+            </div>
+          );
+        })}
       </div>
     </section>
   );

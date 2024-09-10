@@ -28,6 +28,7 @@ export default function AddProduct() {
     main_image: null,
     images: [],
     attributes: [],
+    default_attributes: [],
     brand: "",
     stock: false,
     colors: [],
@@ -61,16 +62,19 @@ export default function AddProduct() {
         pauseOnHover: false,
       });
     }
-    if (productData.price == "") {
-      error = true;
-      toast.error("انتخاب قیمت محصول اجباریست!", {
-        position: "top-right",
-        autoClose: 5000,
-        transition: Bounce,
-        closeOnClick: true,
-        hideProgressBar: false,
-        pauseOnHover: false,
-      });
+    for (const att of productData.default_attributes) {
+      if (!att.value) {
+        error = true;
+        toast.error("مقادیر ویژگی‌ها خالی است!", {
+          position: "top-right",
+          autoClose: 5000,
+          transition: Bounce,
+          closeOnClick: true,
+          hideProgressBar: false,
+          pauseOnHover: false,
+        });
+        break;
+      }
     }
     if (!error) {
       setLoading(true);
@@ -105,6 +109,12 @@ export default function AddProduct() {
       if (productData.attributes.length != 0) {
         formData.append("attributes", JSON.stringify(productData.attributes));
       }
+      if (productData.default_attributes.length != 0) {
+        formData.append(
+          "default_attributes",
+          JSON.stringify(productData.default_attributes)
+        );
+      }
       if (productData.main_image != null) {
         formData.append("main_image", productData.main_image);
       }
@@ -136,6 +146,7 @@ export default function AddProduct() {
           main_image: null,
           images: [],
           attributes: [],
+          default_attributes: [],
           brand: "",
           stock: false,
           colors: [],

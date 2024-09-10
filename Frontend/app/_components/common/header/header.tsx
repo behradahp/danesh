@@ -3,6 +3,7 @@ import Image from "next/image";
 // Components
 import HeaderNavigations from "./header_navigation";
 import HeaderSearchBox from "./heaedr_search_box";
+import HeaderPhoneNumber from "./header_phone_number";
 
 // Images
 import logoImage from "@/public/images/logo.png";
@@ -10,6 +11,8 @@ import logoImage from "@/public/images/logo.png";
 // Icons
 import UserIcon from "@/app/_components/icons/user_icon";
 import PhoneIcon from "@/app/_components/icons/phone_icon";
+
+import Link from "next/link";
 
 export default function Header() {
   return (
@@ -19,14 +22,16 @@ export default function Header() {
         <section className='flex justify-between items-center'>
           {/* Logo */}
           <div className='w-[201.56px] h-[40px]'>
-            <Image
-              src={logoImage}
-              alt='logo'
-              width={0}
-              height={0}
-              sizes='100vw'
-              style={{ width: "100%", height: "100%" }}
-            />
+            <Link href={"/"}>
+              <Image
+                src={logoImage}
+                alt='logo'
+                width={0}
+                height={0}
+                sizes='100vw'
+                style={{ width: "100%", height: "100%" }}
+              />
+            </Link>
           </div>
 
           {/* Search Box */}
@@ -49,9 +54,7 @@ export default function Header() {
 
           {/* Phone Info */}
           <div className='flex items-center gap-[15px]'>
-            <span className='text-[18px] text-[#666666] font-YekanBakhMedium'>
-              ۰۲۱۸۸۳۰۹۵۹۲
-            </span>
+            <HeaderPhoneNumber />
 
             <PhoneIcon />
           </div>

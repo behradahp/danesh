@@ -1,56 +1,73 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 // Components
 import CategoryCard from "./category_card";
 
 // Icons
-import AllInOneIcon from "@/public/images/home_categories/all-in-one.png";
-import laptop from "@/public/images/home_categories/laptop.png";
-import networkSwitch from "@/public/images/home_categories/netwok-switch.png";
+import SliderRightChevron from "../icons/slider_right_chevron";
+import SliderLeftChevron from "../icons/slider_left_chevron";
 
-const CATEGORIES = [
-  {
-    id: 1,
-    name: "آل این وان",
-    image: AllInOneIcon,
-  },
-  {
-    id: 2,
-    name: "لپ تاپ",
-    image: laptop,
-  },
-  {
-    id: 3,
-    name: "گیمینگ",
-    image: AllInOneIcon,
-  },
-  {
-    id: 4,
-    name: "سوییچ شبکه",
-    image: networkSwitch,
-  },
-  {
-    id: 5,
-    name: "لوازم جانبی الکترونیکی",
-    image: AllInOneIcon,
-  },
-  {
-    id: 6,
-    name: "لوازم جانبی غیر الکترونیکی",
-    image: AllInOneIcon,
-  },
-];
+// Api
+import { getCategories } from "@/app/actions/actions";
 
 export default function Categories() {
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [sliderIndex, setSliderIndex] = useState<number>(0);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const res = await getCategories();
+      const data: Category[] = res.data;
+      setCategories(data);
+    };
+
+    fetchCategories();
+  }, []);
+  
   return (
-    <section className='flex justify-between px-[45px]'>
-      {CATEGORIES.map((item) => {
-        return (
-          <div key={item.id}>
-            <CategoryCard name={item.name} image={item.image} id={item.id} />
-          </div>
-        );
-      })}
+    <section className='flex items-center justify-between px-[45px]'>
+      <div
+        onClick={() => {
+          if (sliderIndex == 0) {
+            setSliderIndex(0.06);
+            setTimeout(() => setSliderIndex(0), 100);
+            return;
+          }
+          setSliderIndex((prev) => prev - 1);
+        }}
+      >
+        <SliderRightChevron />
+      </div>
+
+      <div className='flex-grow overflow-hidden'>
+        <div
+          className='w-full flex gap-[25px] px-[25px] transition-all duration-300'
+          style={{ transform: `translateX(${226 * sliderIndex}px)` }}
+        >
+          {
+            categories.map((category) => {
+              return <div key={category.id}>
+                <CategoryCard id={category.id} image={category.image} name={category.name}/>
+              </div>
+            })
+          }
+        </div>
+      </div>
+
+      <div
+        onClick={() => {
+          if (sliderIndex == categories.length - 6) {
+            setSliderIndex(prev => prev + 0.06);
+            setTimeout(() => setSliderIndex(categories.length - 6), 100);
+            return;
+          }
+          setSliderIndex((prev) => prev + 1);
+        }}
+      >
+        <SliderLeftChevron />
+      </div>
     </section>
   );
 }

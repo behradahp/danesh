@@ -14,6 +14,9 @@ urlpatterns = [
     path("products/<int:pk>/", views.ProductRetrieveUpdateDestroy.as_view(), name="product-update"),
     path("products/category/<int:pk>/", views.CategotyProducts.as_view(), name="product-category"),
     path("products/category/count/", views.CategotyProductsCount.as_view(), name="product-count"),
+    path("products/discount", views.DiscountProducts.as_view(), name="discount-products"),
     path("products/search", views.ProductsSearch.as_view(), name="product-search"),
+    path("products/newest/", views.NewestProducts.as_view(), name="newest-products"),
+    path("products/suggested/", views.SuggestedProducts.as_view(), name="suggested-products"),
     path('image/<str:image_path>', views.serve_image, name='serve_image'),
 ]

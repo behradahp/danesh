@@ -17,6 +17,7 @@ import LeftChevron from "@/app/_components/icons/left_chevron";
 // api
 import { getCategories, getProducts } from "@/app/actions/actions";
 
+let filteredProducts: Product[] | null = null;
 export default function AllProducts() {
   const [loading, setLoading] = useState<boolean>(false);
   const [categories, setCategories] = useState<Category[] | null>(null);
@@ -70,6 +71,25 @@ export default function AllProducts() {
 
     return () => clearTimeout(timeout);
   }, [searchQuery]);
+
+  const productFilter = (category_id: number) => {
+    if(!products) return false;
+    
+    filteredProducts = [];
+    for(const product of products!) {
+      for(const category of product.categories) {
+        console.log(category);
+        if(category.id === category_id) filteredProducts.push(product);
+      }
+    }
+
+    if(filteredProducts.length === 0) {
+      filteredProducts = null;
+      return false;
+    }
+
+    return true;
+  }
 
   return (
     <PanelLayout section_id='2'>
@@ -194,20 +214,16 @@ export default function AllProducts() {
                       </Link>
                     </div>
 
-                    {products &&
-                    products.filter((product) => product.category_id == item.id)
-                      .length != 0 ? (
+                    {productFilter(item.id) ? (
                       <div className='w-full flex flex-wrap gap-[22px]'>
-                        {products?.map((product) => {
-                          if (product.category_id == item.id) {
-                            if (productIndex < 5) {
-                              productIndex += 1;
-                              return (
-                                <div key={product.id.toString()}>
-                                  <ProductCard data={product} />
-                                </div>
-                              );
-                            }
+                        {filteredProducts?.map((product) => {
+                          if (productIndex < 5) {
+                            productIndex += 1;
+                            return (
+                              <div key={product.id.toString()}>
+                                <ProductCard data={product} />
+                              </div>
+                            );
                           }
                         })}
                       </div>

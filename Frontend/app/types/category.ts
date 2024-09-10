@@ -1,5 +1,6 @@
 type Category = {
-    id: Number;
+    id: number;
     name: string;
     icon: string;
+    image: string;
 }

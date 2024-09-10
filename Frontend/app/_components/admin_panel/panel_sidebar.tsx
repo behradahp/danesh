@@ -20,7 +20,7 @@ import Link from "next/link";
 
 // Interfaces
 interface Section {
-  id: Number;
+  id: number;
   name: string;
   icon: ({ color }: { color: string }) => React.JSX.Element;
   url: string;

@@ -16,7 +16,6 @@ import ProductAttributes from "@/app/_components/admin_panel/add & edit/left-sid
 
 // Icons
 import CheckIcon from "@/app/_components/icons/check_icon";
-import ImageDeleteIcon from "@/app/_components/icons/image_delete_icon";
 
 // api
 import {
@@ -38,6 +37,7 @@ export default function EditProduct({ params }: { params: { id: string } }) {
     main_image: null,
     images: [],
     attributes: [],
+    default_attributes: [],
     brand: "",
     stock: false,
     colors: [],
@@ -47,6 +47,7 @@ export default function EditProduct({ params }: { params: { id: string } }) {
 
   const [initialLoading, setInitialLoading] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(false);
+  const [isInitialData, setIsInitialData] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -56,7 +57,7 @@ export default function EditProduct({ params }: { params: { id: string } }) {
 
       setTimeout(() => {
         setResData(null);
-      }, 500)
+      }, 500);
 
       if (res.success) {
         const imageFiles: File[] = [];
@@ -73,6 +74,8 @@ export default function EditProduct({ params }: { params: { id: string } }) {
           imageFile = await urlToFile(data.main_image);
         }
 
+        console.log(data.default_attributes);
+
         setProductData({
           categories: data.categories,
           name: data.name,
@@ -82,12 +85,15 @@ export default function EditProduct({ params }: { params: { id: string } }) {
           main_image: imageFile,
           images: imageFiles,
           attributes: data.attributes,
+          default_attributes: data.default_attributes,
           brand: data.brand,
           stock: data.stock,
           colors: data.colors,
         });
 
         setInitialLoading(false);
+
+        setTimeout(() => setIsInitialData(false), 1000);
       } else {
         setInitialLoading(false);
       }
@@ -115,104 +121,115 @@ export default function EditProduct({ params }: { params: { id: string } }) {
   };
 
   const handleEditProduct = async () => {
-    console.log(productData);
-    // let error = false;
-    // if (productData.category_id == -1) {
-    //   error = true;
-    //   toast.error("انتخاب دسته بندی اجباریست!", {
-    //     position: "top-right",
-    //     autoClose: 5000,
-    //     transition: Bounce,
-    //     closeOnClick: true,
-    //     hideProgressBar: false,
-    //     pauseOnHover: false,
-    //   });
-    // }
-    // if (productData.name == "") {
-    //   error = true;
-    //   toast.error("انتخاب اسم محصول اجباریست!", {
-    //     position: "top-right",
-    //     autoClose: 5000,
-    //     transition: Bounce,
-    //     closeOnClick: true,
-    //     hideProgressBar: false,
-    //     pauseOnHover: false,
-    //   });
-    // }
-    // if (productData.price == "") {
-    //   error = true;
-    //   toast.error("انتخاب قیمت محصول اجباریست!", {
-    //     position: "top-right",
-    //     autoClose: 5000,
-    //     transition: Bounce,
-    //     closeOnClick: true,
-    //     hideProgressBar: false,
-    //     pauseOnHover: false,
-    //   });
-    // }
-    // if (!error) {
-    //   setLoading(true);
-    //   const formData = new FormData();
-    //   formData.append("category_id", productData.category_id.toString());
-    //   formData.append("name", productData.name);
-    //   formData.append(
-    //     "description",
-    //     productData.description ? productData.description : " No description"
-    //   );
-    //   formData.append("price", productData.price);
-    //   formData.append("discount_price", productData.discount_price ?? "0");
-    //   formData.append("brand", brandValue);
-    //   const userJson = localStorage.getItem("user");
-    //   if (!userJson) {
-    //     toast.error("خطایی رخ داده است. لطفا دوباره تلاش کنید.!", {
-    //       position: "top-right",
-    //       autoClose: 5000,
-    //       transition: Bounce,
-    //       closeOnClick: true,
-    //       hideProgressBar: false,
-    //       pauseOnHover: false,
-    //     });
-    //     setLoading(false);
-    //     return;
-    //   }
-    //   const admin = JSON.parse(userJson);
-    //   formData.append("admin_username", productData.admin_username);
-    //   formData.append("lats_update_admin_username", admin.username);
-    //   if (productAttributes.length != 0) {
-    //     formData.append("attributes", JSON.stringify(productAttributes));
-    //   }
-    //   if (mainImage != null) {
-    //     console.log(mainImage.file);
-    //     formData.append("main_image", mainImage.file);
-    //   }
-    //   if (productImages.length != 0) {
-    //     for (let index = 0; index < productImages.length; index++) {
-    //       formData.append("images", productImages[index]);
-    //     }
-    //   }
-    //   const res = await editProduct({ data: formData, id: params.id });
-    //   if (res.success) {
-    //     setLoading(false);
-    //     toast.success("محصول ویرایش شد.", {
-    //       position: "top-right",
-    //       autoClose: 5000,
-    //       transition: Bounce,
-    //       closeOnClick: true,
-    //       hideProgressBar: false,
-    //       pauseOnHover: false,
-    //     });
-    //     return;
-    //   }
-    //   toast.error("خطایی رخ داده است. لطفا دوباره تلاش کنید.!", {
-    //     position: "top-right",
-    //     autoClose: 5000,
-    //     transition: Bounce,
-    //     closeOnClick: true,
-    //     hideProgressBar: false,
-    //     pauseOnHover: false,
-    //   });
-    //   setLoading(false);
-    // }
+    let error = false;
+    if (productData.categories.length == -1) {
+      error = true;
+      toast.error("انتخاب دسته بندی اجباریست!", {
+        position: "top-right",
+        autoClose: 5000,
+        transition: Bounce,
+        closeOnClick: true,
+        hideProgressBar: false,
+        pauseOnHover: false,
+      });
+    }
+    if (productData.name == "") {
+      error = true;
+      toast.error("انتخاب اسم محصول اجباریست!", {
+        position: "top-right",
+        autoClose: 5000,
+        transition: Bounce,
+        closeOnClick: true,
+        hideProgressBar: false,
+        pauseOnHover: false,
+      });
+    }
+    for (const att of productData.default_attributes) {
+      if (!att.value) {
+        error = true;
+        toast.error("مقادیر ویژگی‌ها خالی است!", {
+          position: "top-right",
+          autoClose: 5000,
+          transition: Bounce,
+          closeOnClick: true,
+          hideProgressBar: false,
+          pauseOnHover: false,
+        });
+        break;
+      }
+    }
+    if (!error) {
+      setLoading(true);
+      const formData = new FormData();
+      formData.append("categories", JSON.stringify(productData.categories));
+      formData.append("name", productData.name);
+      formData.append(
+        "description",
+        productData.description ? productData.description : " No description"
+      );
+      formData.append("price", productData.price);
+      formData.append("discount_price", productData.discount_price ?? "0");
+      formData.append("brand", productData.brand);
+      formData.append("stock", productData.stock.toString());
+      formData.append("colors", JSON.stringify(productData.colors));
+      const userJson = localStorage.getItem("user");
+      if (!userJson) {
+        toast.error("خطایی رخ داده است. لطفا دوباره تلاش کنید.!", {
+          position: "top-right",
+          autoClose: 5000,
+          transition: Bounce,
+          closeOnClick: true,
+          hideProgressBar: false,
+          pauseOnHover: false,
+        });
+        setLoading(false);
+        return;
+      }
+      const admin = JSON.parse(userJson);
+      formData.append("admin_username", admin.username);
+      formData.append("lats_update_admin_username", admin.username);
+      if (productData.attributes.length != 0) {
+        formData.append("attributes", JSON.stringify(productData.attributes));
+      }
+      if (productData.default_attributes.length != 0) {
+        formData.append(
+          "default_attributes",
+          JSON.stringify(productData.default_attributes)
+        );
+      }
+      if (productData.main_image != null) {
+        formData.append("main_image", productData.main_image);
+      }
+      if (productData.images.length != 0) {
+        if (productData.images.length > 1) {
+          for (let index = 0; index < productData.images.length - 1; index++) {
+            formData.append("images", productData.images[index]);
+          }
+        }
+      }
+      const res = await editProduct({ data: formData, id: params.id });
+      if (res.success) {
+        setLoading(false);
+        toast.success("محصول ویرایش شد.", {
+          position: "top-right",
+          autoClose: 5000,
+          transition: Bounce,
+          closeOnClick: true,
+          hideProgressBar: false,
+          pauseOnHover: false,
+        });
+        return;
+      }
+      toast.error("خطایی رخ داده است. لطفا دوباره تلاش کنید.!", {
+        position: "top-right",
+        autoClose: 5000,
+        transition: Bounce,
+        closeOnClick: true,
+        hideProgressBar: false,
+        pauseOnHover: false,
+      });
+      setLoading(false);
+    }
   };
 
   if (initialLoading) {
@@ -222,6 +239,7 @@ export default function EditProduct({ params }: { params: { id: string } }) {
       </div>
     );
   }
+
   return (
     <>
       <PanelLayout section_id='2'>
@@ -356,6 +374,7 @@ export default function EditProduct({ params }: { params: { id: string } }) {
                 productData={productData}
                 setProductData={setProductData}
                 reset={false}
+                isInitialData={isInitialData}
               />
             </div>
           </div>

@@ -1,6 +1,7 @@
 import "./globals.css";
 import { ToastContainer } from "react-toastify";
 import Image from "next/image";
+import NextTopLoader from 'nextjs-toploader';
 
 import mobileUnavailable from "@/public/images/mobile_unavailable.jpg";
 
@@ -39,6 +40,7 @@ export default function RootLayout({
     >
       <body>
         <ToastContainer />
+        <NextTopLoader />
         <div className='hidden dsk:block'>{children}</div>
 
         <div className='dsk:hidden w-[100vw] h-[100vh] flex flex-col gap-[50px] justify-center items-center'>

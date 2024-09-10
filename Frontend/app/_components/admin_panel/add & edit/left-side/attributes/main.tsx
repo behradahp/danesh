@@ -5,20 +5,23 @@ import "react-toastify/dist/ReactToastify.css";
 // Components
 import BrandAttribute from "./brand";
 import DesktopModal from "@/app/_components/common/modals/desktop_modal";
+import CustomAttributes from "./custom_attributes";
+import ColorAttribute from "./color";
 
 // Icons
 import AddImageIcon from "@/app/_components/icons/add_image_icon";
 import EditIcon from "@/app/_components/icons/edit_icon";
-import ColorAttribute from "./color";
 
 const ProductAttributes = ({
   productData,
   setProductData,
   reset,
+  isInitialData,
 }: {
   productData: ProductData;
   setProductData: Dispatch<SetStateAction<ProductData>>;
   reset: boolean;
+  isInitialData?: boolean;
 }) => {
   const [isAddAttributesOpen, setIsAddAttributesOpen] =
     useState<boolean>(false);
@@ -126,6 +129,13 @@ const ProductAttributes = ({
           reset={reset}
         />
 
+        <CustomAttributes
+          productData={productData}
+          setProductData={setProductData}
+          reset={reset}
+          isInitialData={isInitialData}
+        />
+        
         {productData.attributes.map((item, index) => {
           return (
             <div key={index} className='relative flex'>

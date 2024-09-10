@@ -241,7 +241,7 @@ const ProductImages = ({
               return (
                 <div
                   key={index}
-                  className='relative w-[75px] h-[75px] border border-[#EBEBEB] rounded-[10px] p-[3px]'
+                  className='relative w-[75px] h-[75px] border border-[#EBEBEB] rounded-[10px] p-[3px] cursor-pointer'
                   onClick={(e) => setIsImagesModalOpen(true)}
                 >
                   {showableImages[index] != undefined ? (
@@ -275,7 +275,7 @@ const ProductImages = ({
 
           {/* Main Image */}
           <div
-            className='w-[150px] h-[160px] border border-[#EBEBEB] rounded-[10px] p-[3px]'
+            className='w-[150px] h-[160px] border border-[#EBEBEB] rounded-[10px] p-[3px] cursor-pointer'
             onClick={() => setIsImagesModalOpen(true)}
           >
             {mainImage != null ? (

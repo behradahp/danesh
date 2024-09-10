@@ -17,7 +17,7 @@ const apiInstance = axios.create({
 
 interface ResponseType<T> {
   data: T;
-  status: Number;
+  status: number;
 }
 
 interface UserData extends JwtPayload {

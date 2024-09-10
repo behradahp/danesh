@@ -1,11 +1,11 @@
 import json
 from rest_framework import serializers
-from .models import Category, Product, Image, Attribute, Info, Note, Color
+from .models import Category, Product, Image, Attribute, Info, Note, Color, DefaultAttribute
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ["id", "name", "icon"]
+        fields = ["id", "name", "icon", "image"]
 
 class InfoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -27,6 +27,11 @@ class AttributeSerializer(serializers.ModelSerializer):
         model = Attribute
         fields = ['id', 'key', 'value']
 
+class DefaultAttributeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DefaultAttribute
+        fields = ['id', 'key', 'value']
+
 class ColorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Color
@@ -35,16 +40,18 @@ class ColorSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     images = ImageSerializer(many=True, required=False)
     attributes = AttributeSerializer(many=True, required=False)
+    default_attributes = DefaultAttributeSerializer(many=True, required=False)
     categories = CategorySerializer(many=True, required=False)
     colors = ColorSerializer(many=True, required=False)
 
     class Meta:
         model = Product
-        fields = ["id", "categories", "name", "description", "discount", "price", "discount_price", "main_image", "images", "attributes", "brand", "stock","colors", "published_date", "admin_username", "last_update_date", "lats_update_admin_username"]
+        fields = ["id", "categories", "name","slug", "description", "discount", "price", "discount_price", "main_image", "images", "attributes", "default_attributes", "brand", "stock","colors", "published_date", "admin_username", "last_update_date", "lats_update_admin_username"]
 
     def create(self, validated_data):
         images_data = self.context['request'].FILES.getlist('images')
         attributes_json_data = self.context['request'].data.get('attributes')
+        default_attributes_json_data = self.context['request'].data.get('default_attributes')
         categories_json_data = self.context['request'].data.get('categories')
         colors_json_data = self.context['request'].data.get('colors')
 
@@ -64,11 +71,20 @@ class ProductSerializer(serializers.ModelSerializer):
             product.attributes.clear()
 
         try:
+            default_attributes_data = json.loads(default_attributes_json_data)
+        
+            for default_attribute_data in default_attributes_data:
+                default_attribute = DefaultAttribute.objects.create(product=product, key=default_attribute_data['key'], value=default_attribute_data['value'])
+                product.default_attributes.add(default_attribute)
+        except:
+            product.default_attributes.clear()
+
+        try:
             categories_data = json.loads(categories_json_data)
         
             for category_data in categories_data:
-                category = Category.objects.create(product=product, name=category_data['name'], icon=category_data['icon'])
-                product.categories.add(category)
+                category = Category.objects.filter(id=category_data["id"])
+                product.categories.add(category[0])
         except:
             product.categories.clear()
 
@@ -84,7 +100,6 @@ class ProductSerializer(serializers.ModelSerializer):
         return product
     
     def update(self, instance, valid_data):
-        instance.category_id = valid_data['category_id']
         instance.name = valid_data['name']
         instance.description = valid_data['description']
         instance.discount_price = valid_data['discount_price']
@@ -103,10 +118,12 @@ class ProductSerializer(serializers.ModelSerializer):
             instance.images.add(image)
 
         attributes_json_data = self.context['request'].data.get('attributes')
+        default_attributes_json_data = self.context['request'].data.get('default_attributes')
         categories_json_data = self.context['request'].data.get('categories')
         colors_json_data = self.context['request'].data.get('colors')
 
         try:
+            instance.attributes.clear()
             attributes_data = json.loads(attributes_json_data)
             for attribute_data in attributes_data:
                 attribute = Attribute.objects.create(product=instance, key=attribute_data['key'], value=attribute_data['value'])
@@ -115,10 +132,21 @@ class ProductSerializer(serializers.ModelSerializer):
             instance.attributes.clear()
 
         try:
+            instance.default_attributes.clear()
+            default_attributes_data = json.loads(default_attributes_json_data)
+            for default_attribute_data in default_attributes_data:
+                default_attribute = DefaultAttribute.objects.create(product=instance, key=default_attribute_data['key'], value=default_attribute_data['value'])
+                instance.default_attributes.add(default_attribute)
+        except:
+            instance.default_attributes.clear()
+
+        try:
+            instance.categories.clear()
             categories_data = json.loads(categories_json_data)
             for category_data in categories_data:
-                category = Category.objects.create(product=instance, name=category_data['name'], icon=category_data['icon'])
-                instance.categories.add(category)
+                category = Category.objects.filter(id=category_data["id"])
+                instance.categories.add(category[0])
+            
         except:
             instance.categories.clear()
 

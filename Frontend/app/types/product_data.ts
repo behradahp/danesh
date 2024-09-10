@@ -1,4 +1,5 @@
 type Color = {
+  id: number;
   hex: string;
   name: string;
 }
@@ -12,6 +13,7 @@ type ProductData = {
     main_image: File | null;
     images: File[];
     attributes: Attribute[];
+    default_attributes: Attribute[];
     brand: string;
     stock: boolean;
     colors: Color[];

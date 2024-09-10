@@ -1,14 +1,12 @@
-import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 
-// Images
-import lenovoImage from "@/public/images/popular_brands/lenovo-1-logo-svgrepo-com.png";
-import asusImage from "@/public/images/popular_brands/asus-6630-logo-svgrepo-com.png";
-import xiaomiImage from "@/public/images/popular_brands/xiaomi-logo-svgrepo-com.png";
-import dellImage from "@/public/images/popular_brands/dell-2-logo-svgrepo-com.png";
-import appleImage from "@/public/images/popular_brands/apple-black-logo-svgrepo-com.png";
-import samsungImage from "@/public/images/popular_brands/samsung-1-logo-svgrepo-com.png";
+// Svgs
+import LenovoBrand from "@/app/_components/svgs/brands/lenovo";
+import AppleBrand from "../svgs/brands/apple";
+import XiaomiBrand from "../svgs/brands/xiaomi";
+import DellBrand from "../svgs/brands/dell";
+import AsusBrand from "../svgs/brands/asus";
+import AcerBrand from "../svgs/brands/acer";
 
 export default function PopularBrands() {
   return (
@@ -21,22 +19,22 @@ export default function PopularBrands() {
       {/* Brands */}
       <div className='w-full flex justify-between items-center'>
         <Link href={""}>
-          <Image src={lenovoImage} alt='brand' />
+          <LenovoBrand />
         </Link>
         <Link href={""}>
-          <Image src={asusImage} alt='brand' />
+          <AppleBrand />
         </Link>
         <Link href={""}>
-          <Image src={xiaomiImage} alt='brand' />
+          <XiaomiBrand />
         </Link>
         <Link href={""}>
-          <Image src={dellImage} alt='brand' />
+          <DellBrand />
         </Link>
         <Link href={""}>
-          <Image src={appleImage} alt='brand' />
+          <AsusBrand />
         </Link>
         <Link href={""}>
-          <Image src={samsungImage} alt='brand' />
+          <AcerBrand />
         </Link>
       </div>
     </section>

@@ -14,7 +14,7 @@ const apiInstance = axios.create({
 
 interface ResponseType<T> {
   data: T;
-  status: Number;
+  status: number;
 }
 
 export const getCategories = async () => {
@@ -164,6 +164,60 @@ export const getProducts = async () => {
 export const getProduct = async ({ id }: { id: string }) => {
   try {
     const response = await apiInstance.get(`products/${id}/`);
+
+    return {
+      success: true,
+      data: response.data,
+      error: "",
+    };
+  } catch (err: any) {
+    return {
+      success: false,
+      data: null,
+      error: JSON.stringify(err),
+    };
+  }
+};
+
+export const getNewestProducts = async () => {
+  try {
+    const response = await apiInstance.get(`products/newest/`);
+
+    return {
+      success: true,
+      data: response.data,
+      error: "",
+    };
+  } catch (err: any) {
+    return {
+      success: false,
+      data: null,
+      error: JSON.stringify(err),
+    };
+  }
+};
+
+export const getDiscountProducts = async ({limit} : {limit?: string}) => {
+  try {
+    const response = limit ? await apiInstance.get(`products/discount?limit=${limit}`) : await apiInstance.get(`products/discount`);
+
+    return {
+      success: true,
+      data: response.data,
+      error: "",
+    };
+  } catch (err: any) {
+    return {
+      success: false,
+      data: null,
+      error: JSON.stringify(err),
+    };
+  }
+};
+
+export const getSuggestedProducts = async () => {
+  try {
+    const response = await apiInstance.get(`products/suggested/`);
 
     return {
       success: true,

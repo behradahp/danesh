@@ -1,11 +1,11 @@
 type ProductCategoryCount = {
-    id: Number;
+    id: number;
     name: string;
     icon: string;
-    count: Number;
+    count: number;
 }
 
 type ProductCount = {
-    all: Number;
+    all: number;
     categories: ProductCategoryCount[];
 }
