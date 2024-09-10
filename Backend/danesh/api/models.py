@@ -6,6 +6,10 @@ class Category(models.Model):
     icon = models.TextField()
     image = models.ImageField(null=True)
 
+    @property
+    def slug(self):
+        return self.name.replace(" ", "-")
+
 
 class Image(models.Model):
     image = models.ImageField(null=True)

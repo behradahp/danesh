@@ -1,4 +1,4 @@
-export default function SortIcon() {
+export default function SortIcon({color}: {color?:string}) {
   return (
     <svg
       xmlns='http://www.w3.org/2000/svg'
@@ -13,7 +13,7 @@ export default function SortIcon() {
           x2='13'
           transform='translate(5)'
           fill='none'
-          stroke='#000'
+          stroke={color ?? '#000'}
           stroke-linecap='round'
           stroke-linejoin='round'
           stroke-width='2'
@@ -24,7 +24,7 @@ export default function SortIcon() {
           x2='13'
           transform='translate(5 6)'
           fill='none'
-          stroke='#000'
+          stroke={color ?? '#000'}
           stroke-linecap='round'
           stroke-linejoin='round'
           stroke-width='2'
@@ -35,7 +35,7 @@ export default function SortIcon() {
           x2='13'
           transform='translate(5 12)'
           fill='none'
-          stroke='#000'
+          stroke={color ?? '#000'}
           stroke-linecap='round'
           stroke-linejoin='round'
           stroke-width='2'
@@ -45,7 +45,7 @@ export default function SortIcon() {
           data-name='Line 12'
           x2='0.01'
           fill='none'
-          stroke='#000'
+          stroke={color ?? '#000'}
           stroke-linecap='round'
           stroke-linejoin='round'
           stroke-width='2'
@@ -56,7 +56,7 @@ export default function SortIcon() {
           x2='0.01'
           transform='translate(0 6)'
           fill='none'
-          stroke='#000'
+          stroke={color ?? '#000'}
           stroke-linecap='round'
           stroke-linejoin='round'
           stroke-width='2'
@@ -67,7 +67,7 @@ export default function SortIcon() {
           x2='0.01'
           transform='translate(0 12)'
           fill='none'
-          stroke='#000'
+          stroke={color ?? '#000'}
           stroke-linecap='round'
           stroke-linejoin='round'
           stroke-width='2'

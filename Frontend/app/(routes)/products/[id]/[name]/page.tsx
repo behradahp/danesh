@@ -49,20 +49,6 @@ const ProductPage = ({ params }: { params: { id: string; name: string } }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const [scrollPosition, setScrollPosition] = useState(0);
-  const handleScroll = () => {
-    const position = window.scrollY;
-    setScrollPosition(position);
-  };
-
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll, { passive: true });
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
-
   if (loading) {
     return (
       <div className='w-[100vw] h-[100vh] flex justify-center items-center'>
@@ -114,7 +100,6 @@ const ProductPage = ({ params }: { params: { id: string; name: string } }) => {
               <ProductPagePriceAndOptions
                 price={productData!.price}
                 discountPrice={productData!.discount_price}
-                scrollPosition={scrollPosition}
               />
             </div>
           </div>

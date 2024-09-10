@@ -61,7 +61,7 @@ export default function HeaderCategoryMenu() {
 
           {categories.map((item) => {
             return (
-              <Link href='' key={item.id}>
+              <Link href={`/categories/${item.id}/${item.slug}`} key={item.id}>
                 <div className='flex  gap-[18px] hover:bg-[#8e64dc46] p-[5px] rounded'>
                   <div
                     className='Container mt-[5px]'

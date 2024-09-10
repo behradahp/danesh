@@ -1,3 +1,5 @@
+'use client'
+
 import Image from "next/image";
 import { useState } from "react";
 import DesktopModal from "../../common/modals/desktop_modal";

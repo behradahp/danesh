@@ -1,13 +1,13 @@
+'use client'
+
 import { useEffect, useRef, useState } from "react";
 
 const ProductPagePriceAndOptions = ({
   price,
   discountPrice,
-  scrollPosition,
 }: {
   price: string;
   discountPrice: string;
-  scrollPosition: number;
 }) => {
   const ref = useRef(null);
 

@@ -5,7 +5,7 @@ from .models import Category, Product, Image, Attribute, Info, Note, Color, Defa
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ["id", "name", "icon", "image"]
+        fields = ["id", "name", "slug", "icon", "image"]
 
 class InfoSerializer(serializers.ModelSerializer):
     class Meta:
